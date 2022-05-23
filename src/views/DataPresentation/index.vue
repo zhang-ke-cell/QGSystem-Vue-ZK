@@ -26,62 +26,67 @@
             <el-form-item label="ID">
               <span>{{ props.row.id }}</span>
             </el-form-item>
-            <el-form-item label="Question">
-              <span>{{ props.row.text }}</span>
+            <el-form-item label="Context">
+              <span>{{ props.row.reference.text }}</span>
             </el-form-item>
             <el-form-item label="Answer">
               <span>{{ props.row.answerText }}</span>
             </el-form-item>
-            <el-form-item label="Context">
-              <span>{{ props.row.reference.text }}</span>
+            <el-form-item label="Question">
+              <span>{{ props.row.text }}</span>
             </el-form-item>
             <el-form-item label="Status">
               <span>{{ props.row.checkedTimes > 0 ? 'checked' : 'unchecked' }}</span>
             </el-form-item>
-            <el-form-item label="Fluency">
-              <el-rate
-                v-model="props.row.fluency"
-                disabled
-                show-score
-                text-color="#ff9900"
-                score-template="{value}">
-              </el-rate>
-            </el-form-item>
-            <el-form-item label="Reasonable">
-              <el-rate
-                v-model="props.row.reasonable"
-                disabled
-                show-score
-                text-color="#ff9900"
-                score-template="{value}">
-              </el-rate>
-            </el-form-item>
-            <el-form-item label="Relevance">
-              <el-rate
-                v-model="props.row.relevance"
-                disabled
-                show-score
-                text-color="#ff9900"
-                score-template="{value}">
-              </el-rate>
-            </el-form-item>
-            <el-form-item label="Difficulty">
-              <el-rate
-                v-model="props.row.difficulty"
-                disabled
-                show-score
-                text-color="#ff9900"
-                score-template="{value}">
-              </el-rate>
-            </el-form-item>
-            <el-form-item label="Score">
-              <el-rate
-                v-model="props.row.score"
-                disabled
-                show-score
-                text-color="#ff9900"
-                score-template="{value}">
-              </el-rate>
+            <div style="border:10px black !important">
+              <el-form-item label="Fluency">
+                <el-rate
+                  v-model="props.row.fluency"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}">
+                </el-rate>
+              </el-form-item>
+              <el-form-item label="Reasonable">
+                <el-rate
+                  v-model="props.row.reasonable"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}">
+                </el-rate>
+              </el-form-item>
+              <el-form-item label="Relevance">
+                <el-rate
+                  v-model="props.row.relevance"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}">
+                </el-rate>
+              </el-form-item>
+              <el-form-item label="Difficulty">
+                <el-rate
+                  v-model="props.row.difficulty"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}">
+                </el-rate>
+              </el-form-item>
+              <el-form-item label="Score">
+                <el-rate
+                  v-model="props.row.score"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}">
+                </el-rate>
+              </el-form-item>
+            </div>
+            <el-form-item label="Distractors">
+              <span>{{ props.row.distractors }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -191,6 +196,7 @@ export default {
         this.shrinkRate(this.list);
       })
     },
+
     shrinkRate(list) {
       for (var i = 0; i < list.length; i++) {
         list[i].fluency /= 10;
@@ -198,10 +204,12 @@ export default {
         list[i].relevance /= 10;
       }
     },
+
     filterStatus(value, row) {
       // console.log(row.checkedTimes);
       return row.checkedTimes == value;
     },
+
     // column的key是columnKey，对应的 value 为用户选择的筛选条件的数组filters。
     filterChange(column) {
       // console.log(column)
@@ -219,15 +227,18 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
+
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.fetchData(val);
       this.pageNumber = val;
     },
+
     //保留n位小数
     roundFun(value, n) {
       return Math.round(value*Math.pow(10,n))/Math.pow(10,n);
     },
+
     getDifficultyTag(difficulty) {
       switch (difficulty) {
         case 0:

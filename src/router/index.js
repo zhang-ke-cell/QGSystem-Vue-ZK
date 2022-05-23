@@ -33,7 +33,7 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/Login/index'),
     hidden: true
   },
 
@@ -50,7 +50,7 @@ export const constantRoutes = [
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/Dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
@@ -60,134 +60,153 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
+        path: 'pre',
+        name: 'DataPresentation',
+        component: () => import('@/views/DataPresentation/index'),
         meta: { title: '数据浏览', icon: 'table' }
       }
     ]
   },
 
-  {
-    path: '/myinfo',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '',
-        name: 'MyInfo',
-        component: () => import('@/views/my/info'),
-        meta: { title: '个人信息', icon: 'info' }
-      }
-    ]
-  },
+  // {
+  //   path: '/myinfo',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'MyInfo',
+  //       component: () => import('@/views/my/info'),
+  //       meta: { title: '个人信息', icon: 'info' }
+  //     }
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/mydata',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'MyData',
+  //       component: () => import('@/views/my/evalution'),
+  //       meta: { title: '我的评估', icon: 'table' }
+  //     }
+  //   ]
+  // },
 
   {
-    path: '/mydata',
+    path:'/manual',
     component: Layout,
-    hidden: true,
-    children: [
+    meta: { title: '人工标注', icon: 'el-icon-thumb' },
+    children:[
       {
-        path: '',
-        name: 'MyData',
-        component: () => import('@/views/my/evalution'),
-        meta: { title: '我的评估', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/evaluation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
+        path: 'evaluation',
         name: 'Evaluation',
-        component: () => import('@/views/evaluation/index'),
-        meta: { title: '问题评估', icon: 'el-icon-star-on' }
+        component: () => import('@/views/Manual/Evaluation/index'),
+        meta: { title: '问题评估', icon: 'el-icon-magic-stick' }
+      },
+      {
+        path: 'submit',
+        name: 'Submit',
+        component: () => import('@/views/Manual/Submit'),
+        meta: { title: '提交问题', icon: 'el-icon-edit' }
       }
     ]
   },
 
+  // {
+  //   path: '/Evaluation',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Evaluation',
+  //       component: () => import('@/views/Evaluation/index'),
+  //       meta: { title: '问题评估', icon: 'el-icon-star-on' }
+  //     }
+  //   ]
+  // },
+
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/form/post_question'),
+  //       meta: { title: '提交问题', icon: 'form' }
+  //     }
+  //   ]
+  // },
+
+  // {
+  //   path: '/upload',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Upload',
+  //       component: () => import('@/views/upload/index'),
+  //       meta: { title: '上传数据', icon: 'el-icon-upload' }
+  //     }
+  //   ]
+  // },
+
+
   {
-    path: '/form',
+    path: '/stepqg',
     component: Layout,
+    name: 'StepQG',
+    meta: { title: '问题生成', icon: 'el-icon-setting' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/post_question'),
-        meta: { title: '提交问题', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/upload',
-    component: Layout,
-    children: [
+        path: 'datainput',
+        name: 'DataInput',
+        component: () => import('@/views/StepQG/DataInput'),
+        meta: { title: '数据输入', icon: 'el-icon-document-add' }
+      },
       {
-        path: 'index',
-        name: 'Upload',
-        component: () => import('@/views/upload/index'),
-        meta: { title: '上传数据', icon: 'el-icon-upload' }
-      }
+        path: 'content',
+        name: 'ContentExtraction',
+        component: () => import('@/views/StepQG/ContentExtraction'),
+        meta: { title: '内容抽取', icon:'el-icon-view' }
+      },
+      {
+        path: 'qgevaluation',
+        name: 'QGEvaluation',
+        component: () => import('@/views/StepQG/QGEvaluation'),
+        meta: { title: '问题生成和评估', icon: 'el-icon-magic-stick'  }
+      },
+      {
+        path: 'distractor',
+        name: 'DistractorGeneration',
+        component: () => import('@/views/StepQG/DistractorGeneration'),
+        meta: { title: '干扰项生成', icon: 'el-icon-set-up'}
+      },
+      {
+        path: 'output',
+        name: 'OutputStorage',
+        component: () => import('@/views/StepQG/OutputStorage'),
+        meta: { title: '输出入库', icon: 'el-icon-box' }
+      },
     ]
   },
 
   {
-    path: '/about',
+    path: '/About',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'About',
-        component: () => import('@/views/about/index'),
+        component: () => import('@/views/About/index'),
         meta: { title: '关于我们', icon: 'el-icon-s-opportunity' }
       }
     ]
   },
-
-  {
-    path: '/qg',
-    component: Layout,
-    // redirect: '/datainput',
-    name: 'QG',
-    meta: { title: '问题生成', icon: 'el-icon-goods' },
-    children: [
-      {
-        path: 'datainput',
-        name: 'DataInput',
-        component: () => import('@/views/qg/DataInput'),
-        meta: { title: '数据输入' }
-      },
-      {
-        path: 'content',
-        name: 'ContentExtraction',
-        component: () => import('@/views/qg/ContentExtraction'),
-        meta: { title: '内容抽取' }
-      },
-      {
-        path: 'qgevaluation',
-        name: 'QGEvaluation',
-        component: () => import('@/views/qg/QGEvaluation'),
-        meta: { title: '问题生成和评估' }
-      },
-      {
-        path: 'distractor',
-        name: 'DistractorGeneration',
-        component: () => import('@/views/qg/DistractorGeneration'),
-        meta: { title: '干扰项生成' }
-      },
-      {
-        path: 'output',
-        name: 'OutputStorage',
-        component: () => import('@/views/qg/OutputStorage'),
-        meta: { title: '输出入库' }
-      },
-    ]
-  },
-
   // {
   //   path: 'external-link',
   //   component: Layout,

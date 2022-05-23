@@ -118,22 +118,22 @@ export default {
       total: 120,
 
       tableData: [{// 每个属性值都是一个对象，由sentence的id和实体名构成
-        sentence: '这是抽取出来的No1句话',
+        sentence: '这是抽取出来的No1上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       }, {
-        sentence: '这是抽取出来的No2句话',
+        sentence: '这是抽取出来的No2上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       },{
-        sentence: '这是抽取出来的No3句话',
+        sentence: '这是抽取出来的No3上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       },{
-        sentence: '这是抽取出来的No4句话',
+        sentence: '这是抽取出来的No4上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       },{
-        sentence: '这是抽取出来的No5句话',
+        sentence: '这是抽取出来的No5上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       },{
-        sentence: '这是抽取出来的No6句话',
+        sentence: '这是抽取出来的No6上下文',
         nerValueList:[{sId:'id',nerName:'人名'}, {sId:'id',nerName:'地名'}, {sId:'id',nerName:'时间'}]
       }],
 

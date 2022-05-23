@@ -24,7 +24,7 @@ const users = {
 }
 
 module.exports = [
-  // user login
+  // user Login
   {
     url: '/vue-admin-template/user/login',
     type: 'post',

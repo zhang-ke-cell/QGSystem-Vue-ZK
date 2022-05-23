@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column label="ID" align="center"  width="95">
         <template v-slot="scope">
           {{ scope.row.id }}
         </template>

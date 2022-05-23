@@ -126,40 +126,40 @@ export default {
 
       tableData: [{
         id: '001',
-        context: '第一个context',
-        ans: '234',
-        question: '3.2',
+        context: 'No1上下文',
+        ans: '人名',
+        question: '问题1',
         score:1
       },{
         id: '002',
-        context: '第一个context',
-        ans: '234',
-        question: '3.2',
+        context: 'No2上下文',
+        ans: '人名',
+        question: '问题1',
         score:3
       },{
         id: '003',
-        context: '第二个context',
-        ans: '234',
-        question: '3.2',
+        context: 'No2上下文',
+        ans: '地名',
+        question: '问题2',
         score:5
       },{
         id: '004',
-        context: '第三个context',
-        ans: '234',
-        question: '3.2',
+        context: 'No3上下文',
+        ans: '时间',
+        question: '问题1',
         score:2
       },{
         id: '005',
-        context: '第四个context',
-        ans: '234',
-        question: '3.2',
+        context: 'No4上下文',
+        ans: '人名',
+        question: '问题1',
         score:4
       },
         {
           id: '006',
-          context: '第四个context',
-          ans: '234',
-          question: '3.2',
+          context: 'No4上下文',
+          ans: '时间',
+          question: '问题2',
           score:2
         },],
 

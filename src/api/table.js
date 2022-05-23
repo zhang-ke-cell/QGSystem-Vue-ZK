@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function getList(params) {
   // // MOCK
   // return request({
-  //   url: '/vue-admin-template/table/list',
+  //   url: '/vue-admin-template/DataPresentation/list',
   //   method: 'get',
   //   params
   // })
@@ -17,7 +17,7 @@ export function getList(params) {
 export function getListByToken(params) {
   // // MOCK
   // return request({
-  //   url: '/vue-admin-template/table/list',
+  //   url: '/vue-admin-template/DataPresentation/list',
   //   method: 'get',
   //   params
   // })
