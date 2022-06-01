@@ -47,3 +47,17 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+.el-dialog__title {
+  line-height: 24px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #303133;
+}
+
+.el-divider--horizontal {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 5px 0;
+}

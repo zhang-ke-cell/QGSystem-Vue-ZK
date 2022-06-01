@@ -17,6 +17,9 @@ import request from '@/utils/request'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import vueWaves from './directive/waves'
+Vue.use(vueWaves)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

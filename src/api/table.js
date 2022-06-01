@@ -27,3 +27,11 @@ export function getListByToken(params) {
     params
   })
 }
+
+export function getListByCondition(data){
+  return request({
+    url:'/question/findbycondition',
+    method:'post',
+    data
+  })
+}

@@ -46,7 +46,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/Dashboard',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -62,7 +62,7 @@ export const constantRoutes = [
       {
         path: 'pre',
         name: 'DataPresentation',
-        component: () => import('@/views/DataPresentation/index'),
+        component: () => import('@/views/DataPresentation/SortedTable'),
         meta: { title: '数据浏览', icon: 'table' }
       }
     ]

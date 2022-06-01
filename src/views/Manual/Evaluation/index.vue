@@ -2,92 +2,194 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-          <span class="title"><strong>QA-Pairs Evaluation (Random)</strong></span>
-          <el-button style="float: right; padding: 3px 0; font-size:15px" type="text" @click="randomChooseOne">换一题</el-button>
+          <span class="title"><strong>问答对评估（随机生成）</strong></span>
+          <el-button style="float: right; padding: 3px 0; font-size:15px" type="text" icon='el-icon-refresh' @click="getData">换一题</el-button>
       </div>
-      <div class="text item">
 
+      <div class="text item">
         <el-row :gutter="20">
-          <el-col :span="6"><div class="grid-content label-col"><label>Context</label></div></el-col>
+          <el-col :span="6"><div class="grid-content label-col"><label>标题</label></div></el-col>
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 50px">
+          <el-col :span="24">
+            <el-skeleton v-if="showSkeleton" :rows="1" animated />
+            <span class="content" v-if="!showSkeleton"> {{ dataObj.cTitle }} </span>
+          </el-col>
+        </el-row>
+
+        <el-divider></el-divider>
+        <el-row :gutter="20" >
+          <el-col :span="2">
+            <div class="grid-content label-col" style="line-height: 40px">
+              <label>上下文</label>
+            </div>
+          </el-col>
+          <el-col :span="3">
+            <el-button
+            style="margin-left: 10px;margin-top: 6px"
+            size="mini"
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            @click="toEdit('context')">
+          </el-button></el-col>
+        </el-row>
+        <el-row style="margin-bottom: 50px">
           <el-col :span="24">
             <el-skeleton v-if="showSkeleton" :rows="3" animated />
-            <p class="content" v-if="!showSkeleton"> {{ context }} </p>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6"><div class="grid-content label-col"><label>Question</label></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-skeleton v-if="showSkeleton" :rows="1" animated />
-            <p class="content" v-if="!showSkeleton"> {{ question }} </p>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6"><div class="grid-content label-col"><label>Answer</label></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-skeleton v-if="showSkeleton" :rows="1" animated />
-            <p class="content" v-if="!showSkeleton"> {{ answer }} </p>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6"><div class="grid-content label-col"><label>Title</label></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-skeleton v-if="showSkeleton" :rows="1" animated />
-            <p class="content" v-if="!showSkeleton"> {{ title }} </p>
+            <!--<p class="content" v-if="!showSkeleton"> {{ dataObj.cText }} </p>-->
+
+            <div class="textarea">
+              <el-input
+                :autosize="true"
+                ref="context"
+                type="textarea"
+                v-if="editMode.contextEdit"
+                v-model="dataObj.cText"
+                @blur="toLook('context')"
+                @keyup.native.enter="toLook('context')">
+              </el-input>
+              <span
+                v-else
+                style="margin-left: 10px; display: block;font-size: 18px"
+                @click="toEdit('context')">
+                  {{ dataObj.cText}}
+                </span>
+            </div>
           </el-col>
         </el-row>
 
-        <el-row></el-row>
+        <el-divider></el-divider>
+        <el-row :gutter="20" >
+          <el-col :span="2">
+            <div class="grid-content label-col" style="line-height: 40px">
+              <label>问题</label>
+            </div>
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              style="margin-left: 10px;margin-top: 6px"
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              @click="toEdit('question')">
+            </el-button></el-col>
+        </el-row>
+        <el-row style="margin-bottom: 50px">
+          <el-col :span="24">
+            <el-skeleton v-if="showSkeleton" :rows="1" animated />
+            <div class="textarea">
+              <el-input
+                :autosize="true"
+                ref="question"
+                type="textarea"
+                v-if="editMode.questionEdit"
+                v-model="dataObj.qText"
+                @blur="toLook('question')"
+                @keyup.native.enter="toLook('question')">
+              </el-input>
+              <span
+                v-else
+                style="margin-left: 10px; display: block;font-size: 18px"
+                @click="toEdit('question')">
+                  {{ dataObj.qText}}
+                </span>
+            </div>
+          </el-col>
+        </el-row>
 
-        <el-row :gutter="20" type="flex" align="middle">
-          <el-col :span="3"><div class="grid-content label-col"><label>流畅程度</label></div></el-col>
-          <el-col :span="5"><div style="color:gray;">文本是否流畅通顺</div></el-col>
+        <el-divider></el-divider>
+        <el-row :gutter="20">
+          <el-col :span="2">
+            <div class="grid-content label-col" style="line-height: 40px">
+              <label>答案</label>
+            </div>
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              style="margin-left: 10px;margin-top: 6px"
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              @click="toEdit('answer')">
+            </el-button></el-col>
+        </el-row>
+        <el-row style="margin-bottom: 50px">
+          <el-col :span="24">
+            <el-skeleton v-if="showSkeleton" :rows="1" animated />
+            <div class="textarea">
+              <el-input
+                :autosize="true"
+                ref="answer"
+                type="textarea"
+                v-if="editMode.answerEdit"
+                v-model="dataObj.qAnswer"
+                @blur="toLook('answer')"
+                @keyup.native.enter="toLook('answer')">
+              </el-input>
+              <span
+                v-else
+                style="margin-left: 10px; display: block;font-size: 18px"
+                @click="toEdit('answer')">
+                  {{ dataObj.qAnswer}}
+                </span>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-divider></el-divider>
+        <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
+          <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px"><label>流畅性</label></div></el-col>
+          <el-col :span="5"><div style="color:gray;">问题是否流畅通顺</div></el-col>
           <el-col :span="12">
             <div class="rate-box">
               <el-rate
-                  v-model="fluency"
-                  show-text>
+                :texts="texts"
+                v-model="dataObj.qFluency"
+                show-text>
               </el-rate>
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" type="flex" align="middle">
-          <el-col :span="3"><div class="grid-content label-col"><label>合理程度</label></div></el-col>
+
+        <el-divider></el-divider>
+        <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
+          <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px"><label>合理性</label></div></el-col>
           <el-col :span="5"><div style="color:gray;">问题与答案是否合理</div></el-col>
           <el-col :span="12">
             <div class="rate-box">
               <el-rate
-                  v-model="reasonable"
+                :texts="texts"
+                v-model="dataObj.qReasonability"
                   show-text>
               </el-rate>
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" type="flex" align="middle">
-          <el-col :span="3"><div class="grid-content label-col"><label>相关程度</label></div></el-col>
-          <el-col :span="5"><div style="color:gray;">问题文本是否与相应上下文匹配</div></el-col>
+
+        <el-divider></el-divider>
+        <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
+          <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px"><label>相关性</label></div></el-col>
+          <el-col :span="5"><div style="color:gray;">问题是否与相应上下文匹配</div></el-col>
           <el-col :span="12">
             <div class="rate-box">
               <el-rate
-                  v-model="relevance"
+                :texts="texts"
+                v-model="dataObj.qRelevance"
                   show-text>
               </el-rate>
             </div>
           </el-col>
         </el-row>
-        <el-row></el-row>
-        <el-row :gutter="20" type="flex" align="middle">
-          <el-col :span="3"><div class="grid-content label-col"><label>问题难度</label></div></el-col>
-          <el-col :span="5"><div style="color:gray;">问答该问题的难易程度</div></el-col>
+
+        <el-divider></el-divider>
+        <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
+          <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px"><label>难度</label></div></el-col>
+          <el-col :span="5"><div style="color:gray;">回答该问题的难易程度</div></el-col>
           <el-col :span="12">
-            <el-select v-model="difficulty" placeholder="请选择">
+            <el-select v-model="dataObj.qDifficulty" placeholder="请选择">
               <el-option
                 v-for="item in difficulties"
                 :key="item.value"
@@ -100,140 +202,260 @@
           </el-col>
         </el-row>
 
-        <el-row type="flex" justify="space-between">
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="editDialog = true">修 改</el-button>
-            <el-button type="primary" icon="el-icon-delete" @click="confirmDelete = true">删 除</el-button>
-          </el-button-group>
-          <el-button type="success" @click="nextQuestion">下一个<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+        <el-divider></el-divider>
+        <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
+          <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px"><label>干扰项</label></div></el-col>
+          <el-col :span="5"><div style="color:gray;">答案的干扰项</div></el-col>
+          <el-col :span="5">
+            <div class="rate-box">
+              <el-input v-show="dataObj.qDistractorList.length>0" style="margin-bottom: 5px" v-for="(item,index) in dataObj.qDistractorList" :key="index" v-model="dataObj.qDistractorList[index]">
+              </el-input>
+            </div>
+          </el-col>
+          <el-col :span="3">
+            <el-button
+              v-if="dataObj.qDistractorList.length>0"
+              v-for="index in dataObj.qDistractorList.length"
+              style="margin-bottom: 5px;"
+              type="warning"
+              icon="el-icon-delete"
+              @click="deleteDistractor(index-1)"
+              round
+              plain
+            >
+              删除
+            </el-button>
+          </el-col>
+          <el-col :span="3" >
+            <el-button
+              v-waves
+              icon="el-icon-circle-plus-outline"
+              type="primary"
+              @click="addDistractor"
+              round
+              plain
+            >
+              增加
+            </el-button>
+          </el-col>
         </el-row>
 
-        <el-dialog
-          title="提示"
-          :visible.sync="confirmDelete"
-          width="30%">
-          <span>确定要删除吗</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="confirmDelete = false">取 消</el-button>
-            <el-button type="primary" @click="deleteQ">确 定</el-button>
-          </span>
-        </el-dialog>
-
-        <el-dialog title="修改" :visible.sync="editDialog">
-          <el-form :model="form">
-            <el-form-item label="Context" label-width="120px">
-              <el-input type="textarea" v-model="form.context" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="Question" label-width="120px">
-              <el-input v-model="form.question" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="Answer" label-width="120px">
-              <el-input v-model="form.answer" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editDialog = false">取 消</el-button>
-            <el-button type="primary" @click="editQuestion">确 定</el-button>
-          </div>
-        </el-dialog>
+        <el-divider></el-divider>
+        <el-row type="flex" justify="space-between" style="margin-top: 50px">
+          <!--<el-button-group>-->
+            <!--<el-button type="primary" icon="el-icon-edit" @click="handleEdit">修改QA</el-button>-->
+            <el-button v-waves type="danger" icon="el-icon-delete" @click="showDelete=true" size="large">删 除</el-button>
+          <!--</el-button-group>-->
+          <el-button v-waves type="success" icon='el-icon-suitcase' @click="updateEdit" size="large">保 存</el-button>
+        </el-row>
       </div>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="showDelete"
+        width="30%">
+        <span>确定要删除吗</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="showDelete = false">取 消</el-button>
+            <el-button type="primary" @click="updateDelete">确 定</el-button>
+          </span>
+      </el-dialog>
+
     </el-card>
   </div>
 </template>
 
 <script>
-import { deleteQuestion, getFirstUnchecked, getRandom, rateQuestion, updateQuestion } from '@/api/evaluation'
-import { getToken } from '@/utils/auth'
+import {deleteQuestion, getRandom, updateQuestion} from '@/api/evaluation'
+import {getToken} from '@/utils/auth'
+import cloneDeep from "lodash/cloneDeep";
 
 export default {
   data() {
     return {
       loading: false,
       errored: false,
-      showSkeleton: true,
-      editDialog: false,
-      confirmDelete: false,
-      question_id: 0,
-      context_id: 0,
-      context: 'I am your father.',
-      question: 'Who are you ?',
-      answer: 'father',
-      title: 'human',
+      showSkeleton: true, // 展示加载按钮
+      showEdit: false, //展示编辑对话框
+      showDelete: false, // 展示删除对话框
+      // 返回数据的容器
+      dataObj:{},
+      // 控制展示与编辑
+      editMode:{
+        contextEdit:false,
+        questionEdit:false,
+        answerEdit:false
+      },
+      // 编辑对话框的数据
       form: {
         context: 'I am your father.',
         question: 'Who is you ?',
         answer: 'Father'
       },
-      fluency: 0,
-      reasonable: 0,
-      relevance: 0,
-      difficulties: [{
-        value: '0',
+
+      // fluency: 0,
+      // reasonable: 0,
+      // relevance: 0,
+      difficulties: [
+        {
+        value: 1,
         label: '简单',
         note: '单句即可得答案'
       }, {
-        value: '1',
+        value: 2,
         label: '中等',
         note: '需要多句推理'
       }, {
-        value: '2',
+        value: 3,
         label: '困难',
         note: '难以得出答案'
       }],
       difficulty: '',
+      //星星的辅助文本说明
+      texts:['极差', '差', '一般', '好', '很好'],
       count: 0,
       token: getToken()
     }
   },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      // getFirstUnchecked().then(response => {
-      //   this.putData(response);
-      // })
-      this.randomChooseOne();
-    },
-    putData(params) {
-      this.context = params.data.reference.text;
-      this.question = params.data.text;
-      this.answer = params.data.answerText;
-      this.title = params.data.reference.title;
-      this.question_id = params.data.id;
-      this.context_id = params.data.reference.id;
-      this.form.question = this.question;
-      this.form.context = this.context;
-      this.form.answer = this.answer;
-      this.showSkeleton = false;
-    },
-    fakeLoading() {
-      this.showSkeleton = true;
-      setTimeout(() => {
-        this.showSkeleton = false;
-      }, 2000);
-    },
-    editQuestion() {
-      updateQuestion({
-        id: this.question_id,
-        contextId: this.context_id,
-        context: this.form.context,
-        question: this.form.question,
-        answer: this.form.answer
-      }).then(response => {
-        this.showSkeleton = true;
-        this.putData(response);
-      });
 
-      this.editDialog = false;
-      this.$message({
-        message: '修改成功',
-        type: 'success'
-      });
+  created() {
+    this.getData();
+  },
+
+  methods: {
+    //获取数据
+    // getData() {
+    //   getRandom().then(res=>{
+    //     res.data.qDistractorList = res.data.qDistractorList.filter(item => {
+    //       return item !== ''
+    //     })
+    //     this.dataObj = res.data
+    //     this.showSkeleton = false;
+    //   }, error=>{
+    //     alert(error)
+    //   })
+    // },
+    async getData(){
+      try {
+        let res = await getRandom()
+          res.data.qDistractorList = res.data.qDistractorList.filter(item => {
+            return item !== ''
+          })
+          this.dataObj = res.data
+          this.showSkeleton = false;
+      }catch (error){
+        this.$message.error('获取数据失败')
+      }
     },
-    deleteQ() {
-      deleteQuestion({id: this.question_id}).then(response => {
-        this.confirmDelete = false;
+
+    //由编辑模式转化为展示模式
+    toLook(params){
+      switch (params){
+        case 'context':
+          if(this.dataObj.cText===''){
+          this.$message.error('输入不能为空');
+          return;
+        }
+          this.editMode.contextEdit = false;
+          break;
+        case 'question':
+          if(this.dataObj.qText===''){
+            this.$message.error('输入不能为空');
+            return;
+          }
+          this.editMode.questionEdit = false;
+          break;
+        case 'answer':
+          // if(this.dataObj.qAnswer===''){
+          //   this.$message.error('输入不能为空');
+          //   return;
+          // }
+          this.editMode.answerEdit = false;
+          break;
+      }
+    },
+
+    //由展示模式转化为编辑模式
+    toEdit( params){
+      // console.log(event, params)
+      switch (params){
+        case 'context':
+          this.editMode.contextEdit = true;
+          this.$nextTick(()=>{
+            this.$refs[params].focus()
+          });
+          break;
+        case 'question':
+          this.editMode.questionEdit = true;
+          this.$nextTick(()=>{
+            this.$refs[params].focus()
+          });
+          break;
+        case 'answer':
+          this.editMode.answerEdit = true;
+          this.$nextTick(()=>{
+            this.$refs[params].focus()
+          });
+          break;
+      }
+      // console.log(this.editMode.contextEdit)
+    },
+
+    // 增加干扰项按钮的回调
+    addDistractor(){
+      this.dataObj.qDistractorList.push('')
+    },
+
+    // 删除干扰项的回调
+    deleteDistractor(index){
+      // console.log(index)
+      this.dataObj.qDistractorList.splice(index,1)
+    },
+
+    // 删除干扰项的回调
+
+    // 点击保存按钮的回调
+    async updateEdit(){
+      let data = cloneDeep(this.dataObj)
+      // data.qId = parseInt(data.qId)
+      // console.log(data.qId)
+      // delete data.qDistractorList
+      data.qDistractorList = JSON.stringify(data.qDistractorList)
+      try{
+        let res = await updateQuestion(data)
+        if(res.code===200){
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          });
+          await this.getData()
+        }else{
+          this.$message.error('更新失败')
+        }
+      }catch (error){
+        this.$message.error('更新失败')
+      }
+    },
+    // updateEdit() {
+    //   // console.log(JSON.stringify(this.dataObj))
+    //   let data = cloneDeep(this.dataObj)
+    //   data.qDistractorList = JSON.stringify(data.qDistractorList)
+    //   updateQuestion(data).then(response => {
+    //     this.showSkeleton = true;
+    //   });
+    //   this.showEdit = false;
+    //   this.$message({
+    //     message: '修改成功',
+    //     type: 'success'
+    //   });
+    //   this.getData()
+    // },
+
+
+    // 删除对话框确定按钮的回调
+    updateDelete() {
+      deleteQuestion({qId:this.dataObj.qId }).then(response => {
+        this.showDelete = false;
         if (response.code === 200) {
           this.$message({
             message: '删除成功',
@@ -242,50 +464,54 @@ export default {
         } else {
           this.$message.error('删除失败');
         }
-        this.fetchData();
+        this.getData();
       })
     },
-    nextQuestion() {
-      rateQuestion({
-        id: this.question_id,
-        fluency: this.fluency,
-        reasonable: this.reasonable,
-        relevance: this.relevance,
-        difficulty: this.difficulty,
-        token: this.token
-      }).then(response => {
-        // 获取下一个
-        this.showSkeleton = true;
-        // getFirstUnchecked().then(response => {
-        //   this.putData(response);
-        // })
-        this.fetchData();
-        // 清空评分给下一个问题用
-        this.fluency = 0;
-        this.reasonable = 0;
-        this.relevance = 0;
-        this.difficulty = '';
-      })
-    },
-    randomChooseOne() {
-        getRandom().then(response => {
-          this.showSkeleton = true;
-          this.putData(response);
-        });
-    },
+
+    // nextQuestion() {
+    //   rateQuestion({
+    //     id: this.question_id,
+    //     fluency: this.fluency,
+    //     reasonable: this.reasonable,
+    //     relevance: this.relevance,
+    //     difficulty: this.difficulty,
+    //     token: this.token
+    //   }).then(response => {
+    //     // 获取下一个
+    //     this.showSkeleton = true;
+    //     // getFirstUnchecked().then(response => {
+    //     //   this.handleEdit(response);
+    //     // })
+    //     this.getData();
+    //     // 清空评分给下一个问题用
+    //     this.fluency = 0;
+    //     this.reasonable = 0;
+    //     this.relevance = 0;
+    //     this.difficulty = '';
+    //   })
+    // },
+
+    // randomChooseOne() {
+    //     getRandom().then(response => {
+    //       this.showSkeleton = true;
+    //       this.handleEdit(response);
+    //     });
+    // },
+
     generateRandomNum: function(min, max) {
-        switch(arguments.length){ 
-            case 1: 
-                return parseInt(Math.random()*min+1,10); 
-                break; 
-            case 2: 
-                return parseInt(Math.random()*(max-min+1)+min,10); 
-                break; 
-                default: 
-                    return 0; 
-                    break; 
-        } 
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*min+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(max-min+1)+min,10);
+                break;
+                default:
+                    return 0;
+                    break;
+        }
     },
+
     nextQuestionnnn: async function() {
         await axios
                     .get('http://localhost:8000/choice-question-count')
@@ -329,7 +555,8 @@ export default {
 }
 .grid-content {
     border-radius: 4px;
-    min-height: 36px;
+    min-height: 40px;
+  vertical-align: center;
 }
 .row-bg {
     padding: 10px 0;
@@ -365,7 +592,7 @@ export default {
     font-size: 25px;
 }
 .question {
-    margin-bottom: 25px; 
+    margin-bottom: 25px;
     font-size: 50px;
 }
 .choice {
@@ -389,13 +616,22 @@ export default {
 }
 
 .label-col {
-  font-size: 25px;
+  font-size: 24px;
 
 }
 
 .content {
   margin-left: 3px;
-  font-size: 15px;
+  font-size: 18px;
 }
+
+.el-button+.el-button {
+  margin-left: 0;
+}
+.textarea >>> .el-textarea__inner{
+  font-family:"Microsoft Yahei" !important;
+  font-size:18px !important;
+}
+
 </style>
 

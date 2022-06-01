@@ -16,11 +16,12 @@ export function getRandom(params) {
   })
 }
 
-export function updateQuestion(params) {
+// http://47.95.145.72:8089/qg-server/question/update
+export function updateQuestion(data) {
   return request({
     url: '/question/update',
     method: 'post',
-    params
+    data
   })
 }
 
@@ -34,7 +35,7 @@ export function rateQuestion(params) {
 
 export function deleteQuestion(params) {
   return request({
-    url: '/question/' + params.id,
+    url: `/question/delete/${params.qId}`,
     method: 'delete',
   })
 }
