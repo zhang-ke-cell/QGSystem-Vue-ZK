@@ -10,7 +10,6 @@
 
 ![](demo_img/DataPresentation.png)
 ![](demo_img/EvaluateQuestion.png)
-![](demo_img/SubmmitQuestion.png)
 ![](demo_img/DataInput.png)
 ![](demo_img/ContextExtration.png)
 ![](demo_img/QuestionGeneration.png)
