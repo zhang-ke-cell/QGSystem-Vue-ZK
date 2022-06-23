@@ -8,11 +8,13 @@
 
 [线上demo](http://zscl.xjtudlc.com:8089/)
 
-![](demo_img/table.png)
-![](demo_img/table-detail.png)
-![](demo_img/evaluate.png)
-![](demo_img/post.png)
-
+![](demo_img/DataPresentation.png)
+![](demo_img/EvaluateQuestion.png)
+![](demo_img/SubmmitQuestion.png)
+![](demo_img/DataInput.png)
+![](demo_img/ContextExtration.png)
+![](demo_img/QuestionGeneration.png)
+![](demo_img/DistractorGeneration)
 ## 使用
 
 安装依赖
