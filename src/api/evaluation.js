@@ -8,9 +8,17 @@ export function getFirstUnchecked(params) {
   })
 }
 
-export function getRandom(params) {
+export function getRandom() {
   return request({
     url: '/question/random',
+    method: 'get',
+  })
+}
+
+export function getRandomByCondition(params) {
+  return request({
+    // url: `/question/randomByCondition/${params.cSubject}/${params.cLanguage}/${params.cSource}`,
+    url: `/question/randomByCondition`,
     method: 'get',
     params
   })
@@ -39,3 +47,5 @@ export function deleteQuestion(params) {
     method: 'delete',
   })
 }
+
+
