@@ -1,6 +1,7 @@
- > 本项目实现自脚手架 [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
+## 系统介绍
+> 本项目实现自脚手架 [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
 
-主要用于对**问题生成数据集**的管理以及评估。
+本系统主要用于对**问题生成数据集**的管理以及评估。
 
 [对应后端仓库](https://github.com/Congregalis/QGSystem)
 
