@@ -98,16 +98,18 @@
         </el-dialog>
 
 
-
+        <pagination :total="100"/>
         <el-button  style="margin: 30px 0px 0px 500px; " size="large" type="info" @click="toDataInput">回退</el-button>
         <el-button  size="large" type="primary" @click="toQG">下一步</el-button>
       </div>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination";
 import cloneDeep from "lodash/cloneDeep"
 export default {
   name: "ContentExtraction",
+  components: {Pagination},
   data(){
     return {
       //代表的分页器第几页
@@ -211,7 +213,7 @@ export default {
       //实现自动聚焦
       this.$nextTick(()=>{
         //获取相应的input表单元素，实现自动聚焦
-        // console.log(this.$refs)
+        // console.log(this.$refs, typeof (this.$refs))
         this.$refs[index].focus()
       })
     },

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">QG System</h3>
+        <h3 class="title">QG数据集标注系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,7 +41,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:15px;">公共访问账号：public</span>
@@ -112,7 +112,9 @@ export default {
         this.$refs.password.focus()
       })
     },
+    // 登录业务，发送请求，带着用户名与密码给服务器（成功与失败）
     handleLogin() {
+      // 验证表单元素（用户名和密码）是否符合规则
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -187,8 +189,10 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  //background-color: $bg;
   overflow: hidden;
+  background:url(~@/assets/iharbour.jpg);
+  background-size: 100% 100%;
 
   .login-form {
     position: relative;

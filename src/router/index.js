@@ -62,7 +62,7 @@ export const constantRoutes = [
       {
         path: 'pre',
         name: 'DataPresentation',
-        component: () => import('@/views/DataPresentation/SortedTable'),
+        component: () => import('@/views/DataPresentation'),
         meta: { title: '数据浏览', icon: 'table' }
       }
     ]
@@ -104,7 +104,7 @@ export const constantRoutes = [
       {
         path: 'evaluation',
         name: 'Evaluation',
-        component: () => import('@/views/Manual/Evaluation/index'),
+        component: () => import('@/views/Manual/Evaluation'),
         meta: { title: '问题评估', icon: 'el-icon-magic-stick' }
       },
       {
@@ -168,17 +168,17 @@ export const constantRoutes = [
         component: () => import('@/views/StepQG/DataInput'),
         meta: { title: '数据输入', icon: 'el-icon-document-add' }
       },
-      {
-        path: 'content',
-        name: 'ContentExtraction',
-        component: () => import('@/views/StepQG/ContentExtraction'),
-        meta: { title: '内容抽取', icon:'el-icon-view' }
-      },
+      // {
+      //   path: 'content',
+      //   name: 'ContentExtraction',
+      //   component: () => import('@/views/StepQG/ContentExtraction'),
+      //   meta: { title: '内容抽取', icon:'el-icon-view' }
+      // },
       {
         path: 'qgevaluation',
         name: 'QGEvaluation',
         component: () => import('@/views/StepQG/QGEvaluation'),
-        meta: { title: '问题生成和评估', icon: 'el-icon-magic-stick'  }
+        meta: { title: '问题生成与评估', icon: 'el-icon-magic-stick'  }
       },
       {
         path: 'distractor',

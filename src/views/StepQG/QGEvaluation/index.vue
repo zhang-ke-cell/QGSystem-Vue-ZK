@@ -1,277 +1,433 @@
 <template>
-  <div>
-    <el-card>
-      <!--v-model绑定data中的isWo变量，当isWo=true时switch开启，当isWo=false时switch关闭-->
-      <el-switch
-        v-model="isWo"
-        active-color="green"
-        inactive-color="#ff4949"
-        active-text="有答案"
-        inactive-text="无答案"
-      @change="switchTable">
-      </el-switch>
+  <div class="app-main">
+    <el-card class="box-card" v-loading="loading">
+      <div slot="header" class="clearfix">
+        <div style="display:inline-block;line-height: 40px">
+          <label style="font-size: x-large">问题生成</label>
+        </div>
+        <el-button-group style="float: right;background-color: ghostwhite;">
+          <el-button icon="el-icon-help" @click="selectAlgo">加载模型</el-button>
+          <el-button icon="el-icon-search" @click="getList">获取问题</el-button>
+        </el-button-group>
+        <div style="float:right;height: 40px">
+          <el-divider direction="vertical" style="display:block;float:right"></el-divider>
+        </div>
+        <el-select style="float: right" v-model="algo" placeholder="请选择模型" >
+          <el-option
+            v-for="item in algoOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
 
-      <!--注意这里不要用v-if去判断，不然在使用v-else的table中无法使用el-rate-->
       <el-table
-        v-show="!isShowWo"
-        :data="tableData"
-        :span-method="objectSpanMethod"
+        v-loading="loading"
+        :data="list"
         border
-        style="width: 100%; margin-top: 20px">
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="180"
-          align="center">
+        fit
+        highlight-current-row
+        :default-expand-all="false"
+        >
+        <el-table-column type="expand">
+          <template slot-scope="{row,$index}">
+            <el-table
+              border
+              :data="row.qList"
+              style="width: 100%">
+              <el-table-column label="问题 ID"  align="center" width="85">
+                <template v-slot="{row,$index}">
+                  <span>{{ row.qId}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="问题"  width="290px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row,$index}">
+                  <span>{{ row.qText }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="答案"  width="100px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span>{{ row.qAnswer }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="流畅性" width="100px" align="center">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qFluency" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+              <el-table-column label="合理性" width="100px" align="center">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qReasonability" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+              <el-table-column label="相关性" width="100px" align="center">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qRelevance" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+              <el-table-column label="难度" width="100px" align="center">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qDifficulty" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+              <el-table-column label="状态" class-name="status-col" width="95" align="center">
+                <template slot-scope="{row}">
+                  <div style="margin: 0 auto;text-align: center">
+                    <el-tag :type="row.qIsChecked | qStatusFilter">
+                      {{ row.qIsChecked ? '已标注' : '未标注'}}
+                    </el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="200" >
+                <template slot-scope="{row,$index}">
+                  <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit(row,$index)">
+                    编辑
+                  </el-button>
+                  <!--<el-button v-if="!row.qIsChecked" size="mini" type="success" @click="handleModifyStatus(row,true,$index)">-->
+                  <!--  更新-->
+                  <!--</el-button>-->
+                  <!--<el-button v-if="row.qIsChecked" size="mini" @click="handleModifyStatus(row,false,$index)">-->
+                  <!--  已更新-->
+                  <!--</el-button>-->
+                  <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row,$index)">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
         </el-table-column>
 
-        <el-table-column
-          prop="context"
-          align="center"
-          label="文本">
+        <el-table-column label="上下文 ID" prop="cId"  align="center" width="85" >
+          <template slot-scope="{row}">
+            <span>{{ row.cId }}</span>
+          </template>
         </el-table-column>
-
-        <el-table-column
-          prop="ans"
-          align="center"
-          label="答案">
+        <el-table-column label="上下文"  align="center" :show-overflow-tooltip="true">
+          <template v-slot="{row}">
+            <span>{{ row.cText }}</span>
+          </template>
         </el-table-column>
-
-        <el-table-column
-          prop="question"
-          align="center"
-          label="问题">
-        </el-table-column>
-
-        <el-table-column
-          align="center"
-          label="评估情况">
-          <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit" circle @click="evaluate(scope)"></el-button>
-            <el-button :type="scope.row.flag? 'success':'error'" :icon="scope.row.flag?'el-icon-check':'el-icon-close'"  circle size="small"></el-button>
+        <el-table-column label="状态" class-name="status-col" width="120">
+          <template slot-scope="{row}">
+            <div style="margin: 0 auto;text-align: center">
+              <el-tag :type="row.allChecked | cStatusFilter">
+                {{ row.allChecked ? '已全部标注' : '未全部标注'}}
+              </el-tag>
+            </div>
           </template>
         </el-table-column>
       </el-table>
-
-      <!--注意这里不要用v-else去判断，不然无法使用el-rate-->
-      <el-table
-        v-show="isShowWo"
-        :data="tableData"
-        :span-method="objectSpanMethod"
-        border
-        style="width: 100%; margin-top: 20px">
-        <el-table-column
-          prop="id"
-          label="ID"
-          align="center"
-          width="180">
-        </el-table-column>
-
-        <el-table-column
-          prop="context"
-          align="center"
-          label="文本">
-        </el-table-column>
-
-        <el-table-column
-          prop="question"
-          align="center"
-          label="问题">
-        </el-table-column>
-
-        <el-table-column
-          prop="score"
-          align="center"
-          label="评估情况">
-          <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit" circle @click="evaluate(scope)"></el-button>
-            <el-button  :type="scope.row.flag? 'success':'error'" :icon="scope.row.flag?'el-icon-check':'el-icon-close'" circle size="small"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-button  style="margin: 30px 0px 0px 500px; " size="large" type="info" @click="toContent">回退</el-button>
-      <el-button  size="large" type="primary" @click="toDistractor">下一步</el-button>
     </el-card>
 
-    <el-dialog title="评估" :visible.sync="dialogTableVisible" >
-      <span style="display: block; margin-bottom: 10px; font-size: 2em">{{evaluatedData.context}}</span>
-      <!--v-model绑定value1，且评分值变化时会触发Change事件-->
-      <div v-if="key!='No'&& key!='Score' && key!='context' && key!='score'" style="margin: 20px 0px;font-weight:bold" v-for="(val, key, index) in evaluatedData" :key="index">
-        <span style="display:inline-block; margin-top:5px;font-size: 16px">{{key}}:<br></span>
-        <el-rate
-          style="display: inline-block"
-          v-model="evaluatedData[key]"
-          :texts="texts"
-          show-text
-          @change="changeScore(key)">
-        </el-rate>
-      </div>
+    <Pagination style="text-align: center" v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageLimit" @pagination="getList" />
+
+    <el-dialog title="问题展示" :visible.sync="dialogFormVisible" >
+      <el-form ref="dataForm"  :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="上下文">
+          <el-input type="textarea" :autosize="true" :readonly="true" v-model="temp.cText" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="问题">
+          <el-input type="textarea" :autosize="true" :readonly="false" v-model="temp.qText" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="答案">
+          <el-input type="textarea" :autosize="true" :readonly="false" v-model="temp.qAnswer" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="流畅性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qFluency"
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="合理性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qReasonability"
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="相关性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qRelevance"
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="难度">
+          <el-rate
+            :max="3"
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qDifficulty"
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelUpdate">取 消</el-button>
-        <el-button type="primary" @click="UpdateEvaluation">确 定</el-button>
+        <el-button @click="handleNo">取 消</el-button>
+        <el-button type="primary" @click="handleYes">确 定</el-button>
       </div>
     </el-dialog>
+    <div style="text-align: center">
+      <el-button-group style="margin:0 auto">
+        <el-button type="info" icon="el-icon-arrow-left" @click="toDataInput">返回数据输入</el-button>
+        <el-button type="primary" @click="toDistractorGeneration">干扰项生成<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+      </el-button-group>
+    </div>
   </div>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination";
+import waves from "@/directive/waves";
+import {selectAlgo,getQuestions,updateQustion,deleteQuestion} from "@/api/qgEvaluation";
 import cloneDeep from "lodash/cloneDeep";
+
 export default {
   name: "QGEvaluation",
+  components: {Pagination},
+  directives: { waves },
+  filters: {
+    qStatusFilter(status) {
+      return status ? 'success':'danger'
+    },
+    cStatusFilter(status){
+      return status ? 'success':'danger'
+    }
+  },
   data(){
     return {
-      //switch的相关数据
-      isWo:true,
-      isShowWo:false,
+      loading:false, // 是否显示加载
+      algo:undefined, // 选择的算法
+      algoOptions:[
+        {key:'0', label:'mt5',value:0},
+      ], //模型选项
+      finishLoadAlgo:false, // 判断是否加载完模型
 
-      tableData: [{
-        id: '001',
-        context: 'No1上下文',
-        ans: '人名',
-        question: '问题1',
-        score:1
-      },{
-        id: '002',
-        context: 'No2上下文',
-        ans: '人名',
-        question: '问题1',
-        score:3
-      },{
-        id: '003',
-        context: 'No2上下文',
-        ans: '地名',
-        question: '问题2',
-        score:5
-      },{
-        id: '004',
-        context: 'No3上下文',
-        ans: '时间',
-        question: '问题1',
-        score:2
-      },{
-        id: '005',
-        context: 'No4上下文',
-        ans: '人名',
-        question: '问题1',
-        score:4
-      },
-        {
-          id: '006',
-          context: 'No4上下文',
-          ans: '时间',
-          question: '问题2',
-          score:2
-        },],
+      list:[], // 表格数据
+      total:20,
 
-      //合并相同单元格的数据
-      listData: [],
-      testArr1: [],
-      testPosition1: 0,
+      temp: {}, // 对话框数据
+      dialogFormVisible: false, // 是否显示对话框
 
-      //控制dialog的参数
-      dialogTableVisible:false,
-      evaluatedData:{
-        'context':'这是context',
-        'Fluency':'',
-        'Reasonable':'',
-        'Relevance':'',
-        'Difficulty':'',
-        'Score':'',
-      },
-
-      //el-rate评级的相关数据
-      texts:['差','一般','好','非常好','非常棒'],
-      // score: null
-
-      //判断问题是否被评估
-      checked:false
+      listQuery:{
+        pageNum:0,
+        pageLimit:20
+      }
     }
   },
 
-  mounted() {
-    this.rowSpan(this.testArr1, this.testPosition1, "context");
-  },
-
   methods:{
-    switchTable(){
-      this.isShowWo = !this.isShowWo
-    },
-
-    rowSpan(spanArr, position, spanName) {
-      this.tableData.forEach((item, index) =>{
-          if (index === 0){
-            spanArr.push(1);
-            position = 0;
-          } else{
-            if (this.tableData[index][spanName] === this.tableData[index - 1][spanName]){
-              spanArr[position] += 1;
-              spanArr.push(0);
-            }else{
-              spanArr.push(1);
-              position = index;
-            }
-          }
+    async selectAlgo(){
+      if(this.algo===undefined){
+        this.$message.warning('请先选择模型 ！')
+        return
+      }
+      this.loading = true
+      try{
+        let res = await selectAlgo({'algorithm':this.algo})
+        if(res.code===200){
+          setTimeout(()=>{
+            this.$message.success('加载模型成功')
+            this.loading = false
+            this.finishLoadAlgo = true
+          },300)
+        }else{
+          this.loading = false
         }
-      )
-    },
-
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(rowIndex)
-      if (columnIndex === 1) {
-        let row = this.testArr1[rowIndex];
-        let col = row > 0 ? 1 : 0;
-        return {
-          rowspan: row,
-          colspan: col
-        };
+      }catch (e) {
+        this.loading = false
+        this.$message.error('加载模型失败')
       }
     },
 
-    evaluate(scope){
-      this.dialogTableVisible = true
-      const data = cloneDeep(scope.row)
-      const scores = ['Fluency', 'Reasonable', 'Relevance', 'Difficulty', 'Score']
-      this.$set(this.evaluatedData, 'context', data.context)
-      this.$set(this.evaluatedData, 'No', scope.$index)
-      scores.forEach((item)=>{
-        this.$set(this.evaluatedData, item, 2)
+    async getList(){
+      // if(!this.finishLoadAlgo){
+      //   this.$message.warning('请先加载模型 ！')
+      //   return
+      // }
+      this.loading = true
+      try{
+        let res = await getQuestions(this.listQuery)
+        this.total = res.data.total
+        res.data.dataList.forEach(item=>{
+          let index = item.qList.findIndex(i=>i.qIsChecked===false)
+          item.allChecked = index===-1
+        })
+        this.list = res.data.dataList
+        if(res.code===200){
+          setTimeout(()=>{
+            this.$message.success('获取问题成功')
+            this.loading = false
+          },300)
+        }else{
+          this.loading = false
+        }
+      }catch (e) {
+        this.loading = false
+        this.$message.error('获取问题失败')
+      }
+    },
+
+    handleEdit(row, index){
+      this.dialogFormVisible = true
+      this.temp = cloneDeep(row)
+      // console.log('handleedit', index, row)
+      let index1 = this.list.findIndex(item=>{
+        if(item.qList.length>=index+1){
+          return row.qId === item.qList[index].qId
+        }else{
+          return false
+        }
       })
+      // console.log(index1)
+      this.list[index1].cText && this.$set(this.temp,'cText',this.list[index1].cText)
+      this.list[index1].cId && this.$set(this.temp,'cId',this.list[index1].cId)
     },
 
-    changeScore(scope){
-      //向服务器发送请求...
-    },
-
-    toContent(){
-      this.$router.push({name:'ContentExtraction'})
-    },
-
-    toDistractor(){
-      this.$router.push({name:'DistractorGeneration'})
-    },
-
-    cancelUpdate(){
-      this.dialogTableVisible = false
-      this.evaluatedData =  {
-        'context':'这是context',
-        'Fluency':'',
-        'Reasonable':'',
-        'Relevance':'',
-        'Difficulty':'',
-        'Score':''
+    async handleModifyStatus(row,status,index){
+      // console.log(status)
+      row.qIsChecked = status
+      // console.log(row.qId, index)
+      let index1 = this.list.findIndex(item=>{
+        if(item.qList.length>=index+1) {
+          return row.qId === item.qList[index].qId
+        }else{
+          return false
+        }
+      })
+      // console.log(index1)
+      let index2 = this.list[index1].qList.findIndex(item=>{
+        // console.log(item)
+        return item.qIsChecked === false
+      })
+      // console.log(index2)
+      this.$set(this.list[index1], 'allChecked', index2 === -1)
+      try{
+        // 发送请求
+        this.listLoading = true
+        let res = await updateQustion(row)
+        if(res.code===200){
+          setTimeout(()=>{
+            this.listLoading = false
+            this.$message({
+              message: `成功更新ID为${ row.qId }的问题`,
+              type: 'success'
+            })
+          },300)
+        }else{
+          this.listLoading = false
+        }
+      }catch (e) {
+        this.listLoading = false
+        this.$message({
+          message: `更新ID为${ row.qId }的问题失败`,
+          type: 'error'
+        })
       }
     },
 
-    UpdateEvaluation(){
-      //发送请求...
+    async handleDelete(row,index){
+      //弹框：messagebox的使用
+      this.$confirm(`确定删除?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(async () => {
+        //当用户点击确定按钮的时候会出发
+        this.listLoading = true
+        let res = await deleteQuestion({qId:row.qId})
+        if (res.code === 200) {
+          setTimeout(()=>{
+            this.$message({
+              type: "success",
+              message: `删除ID为${ row.qId }的问题成功!`,
+            });
+            this.getList()
+            this.listLoading = false
+          },300)
+        }
+      })
+        .catch(() => {
+          //当用户点击取消按钮的时候会触发
+          this.$message({
+            type: "info",
+            message: `已取消删除ID为${ row.qId }的问题`,
+          });
+          this.listLoading = false
+        });
+    },
 
-      this.dialogTableVisible = false
-      this.$set(this.tableData[this.evaluatedData.No], 'flag', true)
+    handleYes(){
+      let index1 = this.list.findIndex(item=>item.cId === this.temp.cId)
+      let index2 = this.list[index1].qList.findIndex(item=>{
+        return item.qId===this.temp.qId
+      })
+      delete this.temp.cId
+      delete this.temp.cText
+      this.list[index1].qList.splice(index2,1,this.temp)
+      this.dialogFormVisible = false
+      this.handleModifyStatus(this.list[index1].qList[index2],true,index2)
+      // this.$notify.info({
+      //   title:'提示',
+      //   message:'请点击 更新 按钮更新问题'
+      // })
+    },
+
+    handleNo(){
+      this.dialogFormVisible = false
+    },
+
+    toDataInput(){
+      this.$router.push({name:'DataInput'})
+    },
+
+    toDistractorGeneration() {
+      this.$router.push({name:'DistractorGeneration'})
     }
   }
 }
 </script>
 
 <style scoped>
+  .link-type,
+  .link-type:focus {
+    color: #337ab7;
+    cursor: pointer;
 
+  &:hover {
+     color: rgb(32, 160, 255);
+   }
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 100%;
+  }
+
+  .el-divider--vertical {
+    height: 40px;
+  }
+
+  /deep/ .el-table__expanded-cell[class*=cell] {
+    padding: 0px 47px;
+  }
 </style>

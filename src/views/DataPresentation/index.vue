@@ -1,296 +1,643 @@
-<template>
-  <div class="app-container">
-    <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-      <el-select v-model="select" slot="prepend" placeholder="请选择">
-        <el-option label="Question" value="1"></el-option>
-        <el-option label="Title" value="2"></el-option>
-        <el-option label="Id" value="3"></el-option>
-      </el-select>
-      <el-button slot="append" icon="el-icon-search"></el-button>
-    </el-input>
-
-    <!--
-    @filter-change:当表格的筛选条件发生变化的时候会触发该事件，参数的值是一个对象，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
-    v-loading="listLoading"，element-loading-text="Loading":用于实现正在加载的效果-->
-    <el-table
-      :data="list"
-      v-loading="listLoading"
-      element-loading-text="Loading"
-      fit
-      highlight-current-row
-      @filter-change="filterChange"
-    >
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" label-width="90px" inline class="table-expand">
-            <el-form-item label="ID">
-              <span>{{ props.row.id }}</span>
-            </el-form-item>
-            <el-form-item label="Context">
-              <span>{{ props.row.reference.text }}</span>
-            </el-form-item>
-            <el-form-item label="Answer">
-              <span>{{ props.row.answerText }}</span>
-            </el-form-item>
-            <el-form-item label="Question">
-              <span>{{ props.row.text }}</span>
-            </el-form-item>
-            <el-form-item label="Status">
-              <span>{{ props.row.checkedTimes > 0 ? 'checked' : 'unchecked' }}</span>
-            </el-form-item>
-            <div style="border:10px black !important">
-              <el-form-item label="Fluency">
-                <el-rate
-                  v-model="props.row.fluency"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value}">
-                </el-rate>
-              </el-form-item>
-              <el-form-item label="Reasonable">
-                <el-rate
-                  v-model="props.row.reasonable"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value}">
-                </el-rate>
-              </el-form-item>
-              <el-form-item label="Relevance">
-                <el-rate
-                  v-model="props.row.relevance"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value}">
-                </el-rate>
-              </el-form-item>
-              <el-form-item label="Difficulty">
-                <el-rate
-                  v-model="props.row.difficulty"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value}">
-                </el-rate>
-              </el-form-item>
-              <el-form-item label="Score">
-                <el-rate
-                  v-model="props.row.score"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value}">
-                </el-rate>
-              </el-form-item>
+<template >
+  <div class="app-main" >
+    <el-card class="box-card" style=" margin-bottom: 0px; text-align: left">
+      <div slot="header" class="clearfix">
+        <span  style="display: inline-block;text-align: left !important;line-height:40px;font-weight: bold;font-size:x-large ">根据相关属性筛选</span>
+        <el-button v-waves style="float: right" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          Search
+        </el-button>
+      </div>
+      <div  class="text item" >
+        <el-row type="flex" justify="space-between">
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>标题：</label>
             </div>
-            <el-form-item label="Distractors">
-              <span>{{ props.row.distractors }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
+          </el-col>
+          <el-col :span="22">
+            <el-input v-model="listQuery.cTitle" placeholder="文章标题" style="width: 95%; margin-bottom: 18px" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+        </el-row>
+        <el-row type="flex"  justify="space-between" style="margin-bottom: 18px">
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>ID排序：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.sort"  class="filter-item" @change="handleFilter">
+                <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>语言：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.cLanguage" placeholder="中文" clearable class="filter-item" >
+                <el-option v-for="item in languageOptions" :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>学科：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.cSubject" placeholder="语文" clearable class="filter-item" >
+                <el-option v-for="item in subjectOptions " :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>来源：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 150px">
+              <el-input v-model="listQuery.cSource" placeholder="联想ppt"  class="filter-item" />
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      <div  class="text item " style="text-align: left">
+        <el-row type="flex" justify="space-between" style="margin-bottom: 18px">
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>流畅性：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qFluency" placeholder="1" clearable class="filter-item">
+                <el-option v-for="item in fluencyOptions" :key="item" :label="item" :value="item" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>合理性：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qReasonability" placeholder="1" clearable  class="filter-item">
+                <el-option v-for="item in resonabilityOptions" :key="item" :label="item" :value="item" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>相关性：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qRelevance" placeholder="1" clearable  class="filter-item">
+                <el-option v-for="item in relevanceOptions" :key="item" :label="item" :value="item" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>难度：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qDifficulty" placeholder="1" clearable  class="filter-item">
+                <el-option v-for="item in difficultyOptions" :key="item" :label="item" :value="item" />
+              </el-select>
+            </div>
+          </el-col>
+        </el-row>
 
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.row.id }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Question" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.text }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Answer" width="200" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.answerText }}</span>
-        </template>
-      </el-table-column>
+        <el-row type="flex"  justify="space-between">
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>问题类型：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qType" placeholder="选择题" clearable class="filter-item" >
+                <el-option v-for="item in qTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>疑问词类型：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qQwType" placeholder="what" clearable class="filter-item" >
+                <el-option v-for="item in qQwOptions " :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>认知类型：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qCognitiveType" placeholder="记忆" clearable class="filter-item" >
+                <el-option v-for="item in qCognitiveTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <div style="text-align: right;font-size: 16px;margin-top: 10px">
+              <label>综合评价：</label>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.qScore" placeholder="1" clearable  class="filter-item">
+                <el-option v-for="item in scoreOptions" :key="item" :label="item" :value="item" />
+              </el-select>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </el-card>
 
-      <el-table-column label="Title" width="150" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.reference.title }}
-        </template>
-      </el-table-column>
+      <el-table
+        :key="tableKey"
+        v-loading="listLoading"
+        :data="list"
+        border
+        fit
+        highlight-current-row
+        @sort-change="sortChange"
+        :default-expand-all="false"
+        row-key="cId"
+        :tree-props="{children: 'pList'}">
+        >
+        <el-table-column type="expand">
+          <template v-slot="{row,$index}">
+            <!--<el-collapse v-model="activeNames" >-->
+            <!--  <el-collapse-item :title="`问题${index+1}`" v-for="(qObj,index) in row.qList" :name="index" :key="qObj.qId">-->
+            <!--    <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>-->
+            <!--    <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>-->
+            <!--  </el-collapse-item>-->
+            <!--</el-collapse>-->
+            <el-table
+              :ref="$index"
+              :data="row.qList"
+              border
+              style="width: 100%">
+              <el-table-column label="ID"  align="center" width="80">
+                <template v-slot="{row}">
+                  <span>{{ row.qId }}</span>
+                </template>
+              </el-table-column>
 
-      <el-table-column class-name="status-col" label="Status" width="110" align="center"
-        :filters="[{ text: 'checked', value: 1 }, { text: 'unchecked', value: 0 }]"
-        :filter-multiple="false"
-        :column-key="'status'"
-        :filter-method="filterHandler">
-        <template slot-scope="scope">
-          <!-- <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag :type="scope.row.checkedTimes === 0 ? 'primary' : 'success'" disable-transitions>{{ scope.row.checkedTimes > 0 ? 'checked' : 'unchecked' }}</el-tag>
-        </template>
-      </el-table-column>
+              <el-table-column label="问题"  width="200px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span class="link-type" @click="showQuestion(row,$index)">{{ row.qText }}</span>
+                </template>
+              </el-table-column>
 
-      <el-table-column label="Difficulty" width="110" align="center"
-        :filters="[{ text: '简单', value: 0 }, { text: '中等', value: 1 }, { text: '困难', value: 2 }]"
-        :filter-multiple="true"
-        :column-key="'difficulty'">
-        <template slot-scope="scope">
-          <!-- {{ scope.row.difficulty }} -->
-          <el-tag
-          :type="getDifficultyTag(scope.row.difficulty).tag"
-          disable-transitions>{{getDifficultyTag(scope.row.difficulty).label}}</el-tag>
-        </template>
-      </el-table-column>
-    </el-table>
+              <el-table-column label="问题类型"  width="100px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span>{{ row.qType }}</span>
+                </template>
+              </el-table-column>
 
-     <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="pageNumber"
-        :page-size="pageSize"
-        layout="total, prev, pager, next, jumper"
-        :total="totalElements">
-      </el-pagination>
-    </div>
+              <el-table-column label="疑问词类型"  width="100px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span>{{ row.qQwType }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="认知类型"  width="100px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span>{{ row.qCognitiveType }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="答案"  width="100px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <span>{{ row.qAnswer }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="干扰项"  width="300px" align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}" >
+                  <el-tag v-for="(item,index) in row.qDistractorList" :key="index" style="margin-right: 4px">
+                    {{item}}
+                  </el-tag>
+                  <!--<span>{{ row.qDistractorList }}</span>-->
+                </template>
+              </el-table-column>
+
+              <el-table-column label="流畅性" width="100px">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qFluency" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="合理性" width="100px">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qReasonability" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="相关性" width="100px">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qRelevance" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="难度" width="100px">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qDifficulty" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="综合评价" width="100px">
+                <template v-slot="{row}">
+                  <svg-icon v-for="n in + row.qScore" :key="n" icon-class="star" class="meta-item__icon" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="标注者ID" width="150px"  align="center" :show-overflow-tooltip="true">
+                <template v-slot="{row}">
+                  <el-tag v-for="(item,index) in row.userIdList" :key="index" style="margin-right: 4px">
+                    {{item}}
+                  </el-tag>
+                  <!--<span>{{ row.qDistractorList }}</span>-->
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+
+        <!--sortable：对应列是否可以排序，如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件-->
+        <el-table-column label="ID" prop="cId" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+          <template slot-scope="{row}">
+            <span>{{ row.cId }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="上下文"  align="center" :show-overflow-tooltip="true">
+          <template v-slot="{row}">
+            <span>{{ row.cText }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="标题"  width="200px" align="center" :show-overflow-tooltip="true">
+          <template v-slot="{row}">
+            <span>{{ row.cTitle }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="语言" class-name="status-col" width="100" align="center">
+          <template v-slot="{row}" >
+            <el-tag :type="row.cLanguage | languageFilter" effect="dark">
+              {{ row.cLanguage}}
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="学科" class-name="status-col" width="120" align="center">
+          <template v-slot="{row}">
+            <el-tag :type="row.cSubject | subjectFilter" >
+              {{row.cSubject}}
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="来源" class-name="status-col" width="100" align="center">
+          <template v-slot="{row}">
+            <el-tag :type="row.cSource | sourceFilter" effect="plain">
+              {{row.cSource}}
+            </el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination style="text-align: center" v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageLimit" @pagination="getList" />
+
+    <el-dialog title="问题展示" :visible.sync="dialogFormVisible" >
+      <el-form ref="dataForm"  :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="上下文">
+          <el-input type="textarea" :autosize="true" :readonly="true" v-model="temp.cText" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="问题">
+          <el-input type="textarea" :autosize="true" :readonly="true" v-model="temp.qText" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="问题类型">
+          <el-input type="textarea" autosize :readonly="true" v-model="temp.qType" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="疑问词类型">
+          <el-input type="textarea" autosize :readonly="true" v-model="temp.qQwType" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="认知类型">
+          <el-input type="textarea" autosize :readonly="true" v-model="temp.qCognitiveType" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="答案">
+          <el-input type="textarea" autosize :readonly="true" v-model="temp.qAnswer" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="干扰项">
+          <el-tag v-for="(item,index) in temp.qDistractorList" :key="index" style="margin-right: 20px">{{item}}</el-tag>
+        </el-form-item>
+        <el-form-item label="流畅性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qFluency"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="合理性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qReasonability"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="相关性">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qRelevance"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="难度">
+          <el-rate
+            :max="3"
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qDifficulty"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="综合评价">
+          <el-rate
+            style="height: 40px;padding-top:10px "
+            v-model="temp.qScore"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </el-form-item>
+        <el-form-item label="标注者ID">
+          <el-tag v-for="(item,index) in temp.userIdList" :key="index" style="margin-right: 20px">{{item}}</el-tag>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          关闭
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import waves from '@/directive/waves' // waves directive
+import pagination from '@/components/Pagination' // secondary package based on el-pagination
+import {getListByCondition} from "@/api/table";
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+  name: "SortedTable",
+  components:{ pagination },
+  directives: { waves },
+  filters:{
+    languageFilter(language){
+      const languageMap = {
+        Chinese: 'success',
+        // English: 'info',
+        English: 'danger'
       }
-      return statusMap[status]
-    }
+      let key = language==='中文' ? 'Chinese':'English'
+      return languageMap[key]
+    },
+    subjectFilter(subject){
+      const subjectMap = {
+        Chinese: undefined,
+        DataStructure: 'success',
+        History:'info',
+        ComputerNetwork:'warning',
+        BioScience:'danger'
+      }
+      let key = ''
+      switch (subject)
+      {
+        case '语文':key="Chinese";
+          break;
+        case '数据结构':key="DataStructure";
+          break;
+        case '历史':key="History";
+          break;
+        case '计算机网络':key="ComputerNetwork";
+          break;
+        case '生命系统与科学':key='BioScience'
+      }
+      return subjectMap[key]
+    },
+    sourceFilter(source){
+      const sourceMap = {
+        'jiaoDappt':'success'
+      }
+      let key=''
+      switch (source){
+        case '交大ppt': key='jiaoDappt'
+      }
+      return sourceMap[key]
+    },
   },
-  data() {
+
+
+  data(){
     return {
-      list: null,
-      totalElements: 0,
-      totalPages: 0,
-      pageSize: 10,
-      pageNumber: 1,
-      listLoading: true,
-      select: '',
-      input: '',
-      globalStatus: -1,
-      globalDifficulty: []
+      tableKey: 0, // 用于是否显示reviewer的参数
+      // showReviewer:false,
+      list:[], // 表格数据
+      total: 100, // 数据总量
+      listLoading: false, // 是否显示加载页面
+      activeNames:['1'], // 折叠面板的标记
+
+      //与数据筛选相关的
+      listQuery: {
+        pageNum: 1,
+        pageLimit: 20,
+        sort: '+id',
+        cTitle:null,
+        cLanguage:null,
+        cSubject:null,
+        cSource:null,
+        qType:null,
+        qQwType:null,
+        qCognitiveType:null,
+        qFluency:null,
+        qReasonability:null,
+        qRelevance:null,
+        qDifficulty:null,
+        qScore:null,
+      },
+      fluencyOptions: [1, 2, 3, 4, 5],
+      resonabilityOptions: [1, 2, 3, 4, 5],
+      relevanceOptions: [1, 2, 3, 4, 5],
+      difficultyOptions: [1, 2, 3],
+      scoreOptions: [1, 2, 3, 4, 5],
+      languageOptions:[
+        {key:'Chinese', label:'中文'},
+        {key:'English', label:'英文'}
+      ],
+      subjectOptions:[
+        {key:'Chinese', label:'语文'},
+        {key:'ComputerNetwork', label:'计算机网络'},
+        {key:'History', label:'历史'},
+        {key:'DataStructure', label:"数据结构"},
+        {key:'BioScience', label:"生命系统与科学"}
+      ],
+      sourceOptions:[
+        {key:'jiaoDappt', label:'交大ppt'},
+      ],
+      levelOptions:[
+        {key:'Primary', label:'小学'},
+        {key:'Middle', label:'初中'},
+        {key:'High', label:'高中'}
+      ],
+      qTypeOptions:[
+        {key:'Choice',label:'选择题'},
+        {key:'QA', label: '问答题'}
+      ],
+      qQwOptions:[
+        {key:'what', label:'What'},
+        {key:'when', label: 'When'},
+        {key:'where', label:'Where'},
+        {key:'how', label:'How'},
+        {key:'why', label: 'Why'}
+      ],
+      qCognitiveTypeOptions:[
+        {key:'remember', label:'记忆'},
+        {key:'understand', label:'理解'},
+        {key:'apply', label:'应用'},
+        {key:'analyse', label:'分析'},
+        {key:'evaluate', label:'检查'},
+        {key:'create', label:'创造'}
+      ],
+      sortOptions: [
+        { label: 'ID升序', key: '+id' },
+        { label: 'ID降序', key: '-id' }
+      ],
+      statusOptions: ['published', 'draft', 'deleted'],
+
+      // 与对话框相关的
+      dialogFormVisible:false,
+      temp:[]
     }
   },
   created() {
-    this.fetchData(this.pageNumber)
+    this.getList()
   },
-
-  methods: {
-    fetchData(val) {
+  methods:{
+    async getList() {
       this.listLoading = true
-      getList({'pageNumber': val-1}).then(response => {
-        this.list = response.data.content
-        this.totalPages = response.data.totalPages
-        this.totalElements = response.data.totalElements
-        this.listLoading = false
-        console.log(this.list[0])
-        // 修改分数到0～5之间
-        this.shrinkRate(this.list);
-      })
+      let res = await getListByCondition(this.listQuery)
+      this.list = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
     },
 
-    shrinkRate(list) {
-      for (var i = 0; i < list.length; i++) {
-        list[i].fluency /= 10;
-        list[i].reasonable /= 10;
-        list[i].relevance /= 10;
+    handleFilter() {
+      this.listQuery.pageNum = 1
+      this.getList()
+    },
+
+    getSortClass: function(key) {
+      const sort = this.listQuery.sort
+      // console.log(this.listQuery.sort)
+      // console.log(sort === `+${key}` ? 'ascending' : 'descending')
+      // order 为 ascending 按钮选中的是向上的箭头，如果 order 为 descending 那选中的是向下的箭头。
+      return (sort === `+${key}`) ? 'ascending' : 'descending'
+    },
+
+    sortChange(data) {
+      const { column, prop, order } = data
+      // console.log(column, prop, order)
+      if (prop === 'cId') {
+        this.sortByID(order)
       }
     },
 
-    filterStatus(value, row) {
-      // console.log(row.checkedTimes);
-      return row.checkedTimes == value;
-    },
-
-    // column的key是columnKey，对应的 value 为用户选择的筛选条件的数组filters。
-    filterChange(column) {
-      // console.log(column)
-      if (typeof(column.status) != 'undefined')
-        this.globalStatus = column.status.length == 0 ? -1 : column.status[0];
-      else if (typeof(column.difficulty) != 'undefined')
-        this.globalDifficulty = column.difficulty;
-      console.log(this.globalStatus + " " + this.globalDifficulty);
-    },
-    filterHandler(value, row, column) {
-      // console.log(value, row, column)
-      return row.checkedTimes === value;
-    },
-
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.fetchData(val);
-      this.pageNumber = val;
-    },
-
-    //保留n位小数
-    roundFun(value, n) {
-      return Math.round(value*Math.pow(10,n))/Math.pow(10,n);
-    },
-
-    getDifficultyTag(difficulty) {
-      switch (difficulty) {
-        case 0:
-          return {
-            label:'简单',
-            tag: 'success'
-          };
-        case 1:
-          return {
-            label:'中等',
-            tag: 'warning'
-          };
-        case 2:
-          return {
-            label:'困难',
-            tag: 'danger'
-          };
-        default:
-          return {
-            label:'未评',
-            tag: 'info'
-          };
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
       }
+      this.handleFilter()
+    },
+
+    showQuestion(row,$index){
+      this.temp = row
+      this.temp.cText = this.list[$index].cText
+      this.dialogFormVisible = true
     }
   }
 }
 </script>
 
 <style scoped>
-.table-expand {
-    font-size: 0;
+.text {
+  font-size: 14px;
 }
 
-.table-expand label {
-  width: 90px;
-  color: #99a9bf;
+.item {
+  margin-bottom: 18px;
 }
-.table-expand .el-form-item {
-  /* margin-right: 0; */
-  margin-bottom: 0;
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+
+.box-card {
   width: 100%;
 }
-.block {
-  text-align: center;
+
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+
+&:hover {
+   color: rgb(32, 160, 255);
+ }
 }
-.el-rate {
-  margin-top: 10px;
+
+/deep/ .el-table__expanded-cell{
+  padding: 0 0 0 127px;
 }
-.el-select {
-  width: 130px;
-}
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-}
+
+
 </style>

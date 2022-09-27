@@ -33,13 +33,13 @@ export function updateQuestion(data) {
   })
 }
 
-export function rateQuestion(params) {
-  return request({
-    url: '/question/rate',
-    method: 'post',
-    params
-  })
-}
+// export function rateQuestion(params) {
+//   return request({
+//     url: '/question/rate',
+//     method: 'post',
+//     params
+//   })
+// }
 
 export function deleteQuestion(params) {
   return request({
@@ -48,4 +48,18 @@ export function deleteQuestion(params) {
   })
 }
 
+export function updateQuestions(data){
+  return request({
+    url: '/question/updateQuestions',
+    method:'post',
+    data
+  })
+}
+
+export function deleteQuestions(params){
+  return request({
+    url:`/question/deleteQuestions/${params}`,
+    method:'delete',
+  })
+}
 

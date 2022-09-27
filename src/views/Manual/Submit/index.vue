@@ -1,557 +1,78 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <div style="display: inline-block">
-          <span class="title"><strong>问答对评估</strong></span>
+        <div slot="header" class="clearfix">
+            <span><strong>示例</strong></span>
         </div>
-        <div style="display: inline-block;margin-bottom: 0px;float:right">
-          <el-row style="margin-bottom: 0px" type="flex"  justify="end">
-            <el-col :span="3" style="margin-top: 2px">
-              <el-select v-model="listQuery.cLanguage" placeholder="语言" clearable class="filter-item" >
-                <el-option v-for="item in languageOptions" :key="item.key" :label="item.label" :value="item.label" />
-              </el-select>
-            </el-col>
-            <el-col :span="3" style="margin-top: 2px">
-              <el-select v-model="listQuery.cSubject" placeholder="学科" clearable class="filter-item" >
-                <el-option v-for="item in subjectOptions " :key="item.key" :label="item.label" :value="item.label" />
-              </el-select>
-            </el-col>
-            <el-col :span="4" style="margin-top: 2px">
-              <el-select v-model="listQuery.cSource" placeholder="来源" clearable class="filter-item" >
-                <el-option v-for="item in sourceOptions " :key="item.key" :label="item.label" :value="item.label" />
-              </el-select>
-            </el-col>
-            <el-col :span="2">
-              <el-button style=" margin-left:20px; margin-top: 5px" circle size='small' icon="el-icon-search" @click="getData"></el-button>
-            </el-col>
-            <el-col :span="4">
-              <el-divider direction="vertical" style="display: inline-block;"></el-divider>
-              <el-button v-waves style=" margin-left:10px; font-size:16px;display: inline-block" type="text" icon='el-icon-circle-plus-outline' @click="addQuestion">增加问题</el-button>
-            </el-col>
-          </el-row>
+        <div>
+            <p class="text item"> <strong> Context: </strong>
+                <a class="answer">The Library of Congress</a> ("LOC") is the research library that officially serves the United States Congress and is the "de facto" national library of the United States. It is the oldest federal cultural institution in the United States. The Library is housed in three buildings on Capitol Hill in Washington, D.C.; it also maintains the Packard Campus in Culpeper, Virginia, which houses the National Audio-Visual Conservation Center.
+            </p>
+            <p class="text item"> <strong> Question: </strong> 
+                What is the research library ?
+            </p>
+            <p class="text item"> <strong> Answer: </strong>
+                <a class="answer"> Library of Congress </a>
+            </p>
         </div>
-      </div>
-
-      <div class="text item"    :v-loading="loading">
-        <el-row :gutter="20">
-          <el-col :span="6"><div class="grid-content label-col"><label>标题</label></div></el-col>
-        </el-row>
-        <el-row style="margin-bottom: 50px">
-          <el-col :span="24">
-            <!--<el-skeleton  :rows="1" animated />-->
-            <span class="content" v-if="showSkeleton"> {{ dataObj.cTitle }} </span>
-          </el-col>
-        </el-row>
-
-        <el-divider class="divider"></el-divider>
-        <el-row :gutter="20" >
-          <el-col :span="2">
-            <div class="grid-content label-col" style="line-height: 40px">
-              <label>上下文</label>
-            </div>
-          </el-col>
-          <el-col :span="3">
-            <el-button
-              style="margin-left: 10px;margin-top: 6px"
-              size="mini"
-              type="primary"
-              icon="el-icon-edit"
-              circle
-              @click="toEditContext('context')">
-            </el-button></el-col>
-        </el-row>
-        <el-row style="margin-bottom: 50px">
-          <el-col :span="24">
-            <el-skeleton v-if="showSkeleton" :rows="3" animated />
-            <div class="textarea">
-              <el-input
-                :autosize="true"
-                ref="context"
-                type="textarea"
-                v-if="editMode.editContext"
-                v-model="dataObj.cText"
-                @blur="toLookContext('context')"
-                >
-              </el-input>
-              <span
-                v-else
-                style="margin-left: 10px; display: block;font-size: 18px"
-                @click="toEditContext('context')">
-                  {{ dataObj.cText}}
-                </span>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-collapse v-model="activeNames" >
-        <el-collapse-item  style="font-size: 20px;padding-bottom: 0" v-for='(q,index) in dataObj.qList' :key="index"  :name="`${index+1}`">
-          <template slot="title">
-            <label style="font-size: 20px">{{`问题${index+1}`}}</label>
-            <div style="margin-left: 900px">
-              <el-popconfirm title="确定删除"  @confirm="DeleteQuestion(index)">
-                <el-button  slot="reference" v-waves type="danger" plain circle icon="el-icon-delete" size="small"></el-button>
-              </el-popconfirm>
-            </div>
-          </template>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" justify="start">
-            <el-col :span="2"></el-col>
-            <el-col :span="2" >
-              <div class="grid-content label-col" style="line-height: 40px;font-size: 16px">
-                <label>问题</label>
-              </div>
-            </el-col>
-            <el-col :span="1">
-              <el-button
-                style="margin-left: 10px;margin-top: 6px"
-                size="mini"
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                @click="toEdit(`ques${index.toString()}`)">
-              </el-button></el-col>
-          </el-row>
-          <el-row style="margin-bottom: 20px" type="flex" justify="start">
-            <el-col :span="2"></el-col>
-            <el-col :span="22">
-              <el-skeleton v-if="showSkeleton" :rows="1" animated />
-              <div class="textarea">
-                <el-input
-                  :autosize="true"
-                  type="textarea"
-                  :ref="`ques${index}`"
-                  v-if="editMode.editQuestion[index]===true"
-                  v-model="q.qText"
-                  @blur="toLook(`ques${index.toString()}`)"
-                  >
-                </el-input>
-                <span
-                  v-else
-                  style="margin-left: 10px; display: block;font-size: 14px"
-                  @click="toEdit(`ques${index.toString()}`)">
-                  {{ q.qText}}
-                </span>
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" justify="start">
-            <el-col :span="2"></el-col>
-            <el-col :span="2">
-              <div class="grid-content label-col" style="line-height: 40px;font-size: 16px">
-                <label>答案</label>
-              </div>
-            </el-col>
-            <el-col :span="1">
-              <el-button
-                style="margin-left: 10px;margin-top: 6px"
-                size="mini"
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                @click="toEdit(`ans${index.toString()}`)">
-              </el-button></el-col>
-          </el-row>
-          <el-row style="margin-bottom: 20px" type="flex" justify="start">
-            <el-col :span="2"></el-col>
-            <el-col :span="22">
-              <el-skeleton v-if="showSkeleton" :rows="1" animated />
-              <div class="textarea">
-                <el-input
-                  :autosize="true"
-                  type="textarea"
-                  :ref="`ans${index}`"
-                  v-if="editMode.editAnswer[index]===true"
-                  v-model="q.qAnswer"
-                  @blur="toLook(`ans${index.toString()}`)"
-                  >
-                </el-input>
-                <span
-                  v-else
-                  style="margin-left: 10px; display: block;font-size: 14px"
-                  @click="toEdit(`ans${index.toString()}`)">
-                  {{ q.qAnswer}}
-                </span>
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px;font-size: 16px"><label>流畅性</label></div></el-col>
-            <el-col :span="5"><div style="color:gray;">问题是否流畅通顺</div></el-col>
-            <el-col :span="12">
-              <div class="rate-box">
-                <el-rate
-                  :texts="texts"
-                  v-model="q.qFluency"
-                  show-text>
-                </el-rate>
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px;font-size: 16px"><label>合理性</label></div></el-col>
-            <el-col :span="5"><div style="color:gray;">问题与答案是否合理</div></el-col>
-            <el-col :span="12">
-              <div class="rate-box">
-                <el-rate
-                  :texts="texts"
-                  v-model="q.qReasonability"
-                  show-text>
-                </el-rate>
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><div class="grid-content label-col ;font-size: 16px" style="line-height: 40px;font-size: 16px"><label>相关性</label></div></el-col>
-            <el-col :span="5"><div style="color:gray;">问题是否与相应上下文匹配</div></el-col>
-            <el-col :span="12">
-              <div class="rate-box">
-                <el-rate
-                  :texts="texts"
-                  v-model="q.qRelevance"
-                  show-text>
-                </el-rate>
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px;font-size: 16px"><label>难度</label></div></el-col>
-            <el-col :span="5"><div style="color:gray;">回答该问题的难易程度</div></el-col>
-            <el-col :span="3">
-              <el-select v-model="q.qDifficulty" placeholder="请选择">
-                <el-option
-                  v-for="item in difficulties"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-row>
-
-          <el-divider></el-divider>
-          <el-row :gutter="20" type="flex" align="middle" style="margin-bottom: 8px">
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><div class="grid-content label-col" style="line-height: 40px;font-size: 16px"><label>干扰项</label></div></el-col>
-            <el-col :span="5"><div style="color:gray;">答案的干扰项</div></el-col>
-            <el-col :span="5">
-              <div class="rate-box">
-                <el-input v-show="q.qDistractorList.length>0" style="margin-bottom: 5px;display: inline-block" v-for="(item,index) in q.qDistractorList" :key="index" v-model="q.qDistractorList[index]">
-                </el-input>
-              </div>
-            </el-col>
-            <el-col :span="2">
-              <template v-for="numo in q.qDistractorList.length">
-                <div style="height: 40px;margin-bottom: 5px;line-height: 40px">
-                  <el-button
-                    style="vertical-align: center"
-                    v-if="q.qDistractorList.length>0"
-                    type="danger"
-                    icon="el-icon-minus"
-                    @click="deleteDistractor(index,numo-1)"
-                    circle
-                    plain
-                    size="small"
-                  >
-                  </el-button>
-                </div>
-              </template>
-            </el-col>
-            <el-col :span="3" >
-              <el-button
-                v-waves
-                icon="el-icon-plus"
-                type="primary"
-                @click="addDistractor(index)"
-                circle
-                plain
-                size="small"
-              >
-              </el-button>
-            </el-col>
-          </el-row>
-
-        </el-collapse-item>
-      </el-collapse>
-
-        <div style="text-align: center;margin-top: 30px">
-          <el-button-group >
-            <el-button v-waves type="danger" icon="el-icon-delete" @click="updateDelete" >删 除</el-button>
-            <el-button v-waves type="success" icon='el-icon-suitcase' @click="updateEdit" >保 存</el-button>
-          </el-button-group>
-        </div>
-      </div>
     </el-card>
-
+    <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item label="Context">
+        <el-input type="textarea" v-model="form.context" />
+      </el-form-item>
+      <el-form-item label="Question">
+        <el-input v-model="form.question" />
+      </el-form-item>
+      <el-form-item label="Answer">
+        <el-input v-model="form.answer" />
+      </el-form-item>
+      <el-form-item label="Title">
+        <el-input v-model="form.title" placeholder="若非维基百科源，无需填写" />
+      </el-form-item>
+      <el-form-item label="Source">
+        <el-select v-model="form.source" placeholder="请选择数据来源">
+          <el-option label="Wikipedia" value="wikipedia" />
+          <el-option label="其他" value="others" />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button @click="onCancel">清空</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
-import {getRandomByCondition} from '@/api/evaluation'
-import {toString} from "lodash";
-import {getToken} from "@/utils/auth";
 export default {
-  name: "index",
-  data(){
+  data() {
     return {
-      languageOptions:[
-        {key:'Chinese', label:'中文'},
-        {key:'English', label:'英文'}
-      ],
-      subjectOptions:[
-        {key:'Chinese', label:'语文'},
-        {key:'ComputerNetwork', label:'计算机网络'},
-        {key:'History', label:'历史'},
-        {key:'DataStructure', label:"数据结构"},
-        {key:'BioScience', label:"生命系统与科学"}
-      ],
-      sourceOptions:[
-        {key:'jiaoDappt', label:'交大ppt'},
-      ],
-
-      listQuery:{
-        'cLanguage':'',
-        'cSubject':'',
-        'cSource':''
-      },
-      dataObj:{
-        "cTitle": "争白前取华细",
-        "cText": "sit",
-        "qList": [
-          {
-            "qId": "69",
-            "qText": "mollit veniam",
-            "qAnswer": "et in aliqua",
-            "qDistractorList": [
-              "Duis Lorem occaecat ea",
-              "aute amet sunt consequat minim",
-              "Ut in Duis"
-            ],
-            "qFluency": 3,
-            "qRelevance": 4,
-            "qDifficulty": 3,
-            "qReasonability": 4
-          },
-          {
-            "qId": "27",
-            "qText": "cupidatat",
-            "qAnswer": "labore ipsum voluptate",
-            "qDistractorList": [
-              "non tempor",
-              "labore",
-              "voluptate ut",
-              "anim voluptate cillum tempor",
-              "nulla Lorem"
-            ],
-            "qFluency": 4,
-            "qRelevance": 4,
-            "qDifficulty": 4,
-            "qReasonability": 2
-          },
-          {
-            "qId": "50",
-            "qText": "minim aliqua fugiat",
-            "qAnswer": "sed",
-            "qDistractorList": [
-              "ea tempor consectetur fugiat magna",
-              "do"
-            ],
-            "qFluency": 3,
-            "qRelevance": 5,
-            "qDifficulty": 2,
-            "qReasonability": 4
-          },
-          {
-            "qId": "88",
-            "qText": "non consectetur",
-            "qAnswer": "ipsum eu Excepteur",
-            "qDistractorList": [
-              "elit eiusmod magna ex adipisicing"
-            ],
-            "qFluency": 5,
-            "qRelevance": 2,
-            "qDifficulty": 1,
-            "qReasonability": 5
-          }
-        ]
-      },
-
-      // 控制手风琴折叠
-      activeNames: [],
-
-      showSkeleton:false,
-      showDelete:false,
-      editMode:{
-        editContext:false,
-        editQuestion:[],
-        editAnswer:[false,false,false,false]
-      },
-      loading:true,
-
-      difficulties: [
-        {
-          value: 1,
-          label: '简单',
-        }, {
-          value: 2,
-          label: '中等',
-        }, {
-          value: 3,
-          label: '困难',
-        }],
-      difficulty: '',
-      //星星的辅助文本说明
-      texts:['极差', '差', '一般', '好', '很好'],
-      count: 0,
-      token: getToken()
+      form: {
+        context: '',
+        question: '',
+        answer: '',
+        title: '',
+        source: '',
+      }
     }
   },
-
-
-  methods:{
-    // 发送请求获取数据
-    async getData(){
-      try{
-        let res = await getRandomByCondition(this.listQuery)
-        if(res.code===200){
-          this.dataObj = res.data
-        }
-      }catch (error){
-        this.$message.error('获取数据失败')
-      }
+  methods: {
+    onSubmit() {
+      this.$message('Building...');
     },
-
-    addQuestion(){
-      this.dataObj.qList.push({
-        qId: -1,
-        qText:'',
-        qAnswer:'',
-        qDistractorList:[],
-        qFluency:0,
-        qRelevance:0,
-        qDifficulty:0,
-        qReasonability:0
-      })
-      this.$notify.info({
-        title: '消息',
-        message: '已经在底部增加一个问题'
-      });
-    },
-
-    toEditContext(params){
-      this.editMode.editContext = true;
-      this.$nextTick(()=>{
-        console.log(this.$refs[params])
-        this.$refs[params].focus()
-      });
-    },
-
-    toLookContext(params){
-      if(this.dataObj.cText==='') {
-        this.$message.error('输入不能为空');
-        return;
-      }
-      this.editMode.editContext = false
-    },
-
-    toLook(parmas){
-      const start = parmas[0]
-      const end = parseInt(parmas[parmas.length-1])
-      if(start==='a'){
-        if(this.dataObj.qList[end].qAnswer==='') {
-          this.$message.error('输入不能为空');
-          return;
-        }
-        this.editMode.editAnswer[end] = false
-        this.$forceUpdate()
-      }else {
-        if(this.dataObj.qList[end].qText==='') {
-          this.$message.error('输入不能为空');
-          return;
-        }
-        this.editMode.editQuestion[end] = false
-        this.$forceUpdate()
-      }
-    },
-
-    toEdit(parmas){
-      const start = parmas[0]
-      const end = parseInt(parmas[parmas.length-1])
-      if(start==='a'){
-        this.editMode.editAnswer[end] = true
-        this.$forceUpdate()
-        this.$nextTick(()=>{
-          console.log(this.$refs[parmas])
-          this.$refs[parmas][0].focus()
-        })
-      }else {
-        this.editMode.editQuestion[end] = true
-        this.$forceUpdate()
-        this.$nextTick(()=>{
-          this.$refs[parmas][0].focus()
-        })
-      }
-    },
-
-    // 增加干扰项按钮的回调
-    addDistractor(index){
-      this.dataObj.qList[index].qDistractorList.push('')
-    },
-
-    // 删除干扰项的回调
-    deleteDistractor(index, numo){
-      // console.log(index)
-      this.dataObj.qList[index].qDistractorList.splice(numo,1)
-    },
-
-    DeleteQuestion(index){
-      this.dataObj.qList.splice(index,1)
-      this.$notify({
-        title: '成功',
-        message: '删除问题成功',
-        type: 'success'
-      });
-
-    },
-
-    updateDelete(){
-      this.$confirm('删除所有的问题?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+    onCancel() {
+      this.clear()
+      this.$message({
+        message: '已清空!',
         type: 'warning'
-      }).then(() => {
-        //发送请求
-        // let  await
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      });
-
+      })
     },
-
-    updateEdit() {
-
+    clear() {
+      this.form.context = ''
+      this.form.question = ''
+      this.form.answer = ''
+      this.form.title = ''
+      this.form.source = ''
     }
   }
 }
@@ -561,110 +82,35 @@ export default {
 .line{
   text-align: center;
 }
-.el-row {
-  margin-bottom: 20px;
-  /* &:last-child {
-      margin-bottom: 0;
-  } */
-}
-.el-col {
-  border-radius: 4px;
-}
-.grid-content {
-  border-radius: 4px;
-  min-height: 40px;
-  vertical-align: center;
-}
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
-}
 .text {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .item {
-  margin-bottom: 18px;
+    margin-bottom: 18px;
 }
 
 .clearfix:before,
+
 .clearfix:after {
-  display: table;
-  content: "";
+    display: table;
+    content: "";
 }
+
 .clearfix:after {
-  clear: both
+    clear: both
 }
 
 .box-card {
-  width: 90%;
-  height: 80%;
-  margin: 0 auto;
-}
-.basic-layout {
-  text-align: center;
-  margin-top: 30px;
-}
-.title {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 25px;
-}
-.question {
-  margin-bottom: 25px;
-  font-size: 50px;
-}
-.choice {
-  width: 100%;
-  font-size: 35px;
-}
-.rate-box {
-  /* height: 36px;
-  display: flex;
-  align-items: center */
-}
-.rate {
-  font-size: 25px;
-}
-/deep/ .el-rate__icon {
-  font-size: 25px;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    border-radius: 20px;
 }
 
-.bg-purple {
-  background: #d3dce6;
-}
-
-.label-col {
-  font-size: 20px;
-
-}
-
-.content {
-  margin-left: 3px;
-  font-size: 18px;
-}
-
-.el-button+.el-button {
-  margin-left: 0;
-}
-.textarea >>> .el-textarea__inner{
-  font-family:"Microsoft Yahei" !important;
-  font-size:14px !important;
-}
-
-/*/deep/ .el-collapse-item__content{*/
-/*  padding-bottom: 0px;*/
-/*}*/
-
-.el-divider--horizontal {
-  display: block;
-  height: 1px;
-  width: 100%;
-  margin: 5px 75px;
-}
-
-/deep/ .divider{
-  margin: 5px 0px;
+.answer {
+    font-weight: bold;
+    color: #F56C6C;
 }
 </style>
 
