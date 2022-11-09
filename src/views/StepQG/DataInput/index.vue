@@ -319,15 +319,20 @@ export default {
     },
     showContext(e){
       e.stopPropagation();
-      if(this.active===2){
-        this.getList()
-        setTimeout(()=>{
-          this.isShowTable = true;
-          this.active = 3
-        },300)
-      }else{
-        this.$message.warning('请先上传文件到服务器 ！')
-      }
+      this.getList()
+      setTimeout(()=>{
+        this.isShowTable = true;
+        this.active = 3
+      },300)
+      // if(this.active===2){
+      //   this.getList()
+      //   setTimeout(()=>{
+      //     this.isShowTable = true;
+      //     this.active = 3
+      //   },300)
+      // }else{
+      //   this.$message.warning('请先上传文件到服务器 ！')
+      // }
     },
 
     // 与表格操作相关的操作
