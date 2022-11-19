@@ -2,23 +2,55 @@
   <div class="app-main" >
     <el-card class="box-card" style=" margin-bottom: 0px; text-align: left">
       <div slot="header" class="clearfix">
-        <span  style="display: inline-block;text-align: left !important;line-height:40px;font-weight: bold;font-size:x-large ">根据相关属性筛选</span>
-        <el-button v-waves style="float: right" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-          Search
-        </el-button>
+        <el-row>
+          <el-col :span="6">
+            <span  style="display: inline-block;text-align: left !important;line-height:40px;font-weight: bold;font-size:x-large ">根据相关属性筛选</span>
+          </el-col>
+          <!--<el-col :span="18">-->
+          <!--  <div style="margin-top: 4px;font-size: 10px">-->
+          <!--    <el-tag-->
+          <!--      :key="listQuery.cSubject"-->
+          <!--      v-show="listQuery.cSubject"-->
+          <!--      closable-->
+          <!--      :disable-transitions="false"-->
+          <!--      type="success"-->
+          <!--      size="medium"-->
+          <!--      @close="handleClose(listQuery.cSubject)">-->
+          <!--      {{listQuery.cSubject}}-->
+          <!--    </el-tag>-->
+          <!--  </div>-->
+          <!--</el-col>-->
+        </el-row>
+
+        <!--<el-button v-waves style="float: right" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">-->
+        <!--  筛选-->
+        <!--</el-button>-->
       </div>
       <div  class="text item" >
-        <el-row type="flex" justify="space-between">
+        <!--<el-row type="flex" justify="start" style="margin-bottom: 18px">-->
+        <!--  <el-col :span="2">-->
+        <!--    <div style="text-align: right;font-size: 16px;margin-top: 10px">-->
+        <!--      <label>标题：</label>-->
+        <!--    </div>-->
+        <!--  </el-col>-->
+        <!--  <el-col :span="22">-->
+        <!--    <el-input v-model="listQuery.cTitle" placeholder="文章标题" style="width: 95%; margin-bottom: 18px" class="filter-item" @keyup.enter.native="handleFilter" />-->
+        <!--  </el-col>-->
+        <!--</el-row>-->
+        <el-row type="flex"  justify="space-between" style="margin-bottom: 18px">
           <el-col :span="2">
-            <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>标题：</label>
+            <div style="text-align: right;font-size: 20px;margin-right: 2px;">
+              <el-tag type="success" style="height: 40px;" ><label style="font-size:18px;line-height: 38px">数据集:</label></el-tag>
+              <!--<label>数据集：</label>-->
             </div>
           </el-col>
-          <el-col :span="22">
-            <el-input v-model="listQuery.cTitle" placeholder="文章标题" style="width: 95%; margin-bottom: 18px" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-col :span="4">
+            <div style="text-align: left;width: 100px">
+              <el-select v-model="listQuery.cSubject" placeholder="语文" clearable class="filter-item" @change="handleFilter">
+                <el-option v-for="item in subjectOptions " :key="item.key" :label="item.label" :value="item.label" />
+              </el-select>
+            </div>
           </el-col>
-        </el-row>
-        <el-row type="flex"  justify="space-between" style="margin-bottom: 18px">
           <el-col :span="2">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
               <label>ID排序：</label>
@@ -38,20 +70,8 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.cLanguage" placeholder="中文" clearable class="filter-item" >
+              <el-select v-model="listQuery.cLanguage" placeholder="中文" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in languageOptions" :key="item.key" :label="item.label" :value="item.label" />
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :span="2">
-            <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>学科：</label>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.cSubject" placeholder="语文" clearable class="filter-item" >
-                <el-option v-for="item in subjectOptions " :key="item.key" :label="item.label" :value="item.label" />
               </el-select>
             </div>
           </el-col>
@@ -61,8 +81,8 @@
             </div>
           </el-col>
           <el-col :span="4">
-            <div style="text-align: left;width: 150px">
-              <el-input v-model="listQuery.cSource" placeholder="联想ppt"  class="filter-item" />
+            <div style="text-align: left;width: 100px">
+              <el-input v-model="listQuery.cSource" placeholder="联想ppt"  class="filter-item" @change="handleFilter"/>
             </div>
           </el-col>
         </el-row>
@@ -76,7 +96,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qFluency" placeholder="1" clearable class="filter-item">
+              <el-select v-model="listQuery.qFluency" placeholder="1" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in fluencyOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
@@ -88,7 +108,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qReasonability" placeholder="1" clearable  class="filter-item">
+              <el-select v-model="listQuery.qReasonability" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in resonabilityOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
@@ -100,7 +120,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qRelevance" placeholder="1" clearable  class="filter-item">
+              <el-select v-model="listQuery.qRelevance" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in relevanceOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
@@ -112,7 +132,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qDifficulty" placeholder="1" clearable  class="filter-item">
+              <el-select v-model="listQuery.qDifficulty" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in difficultyOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
@@ -127,7 +147,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qType" placeholder="选择题" clearable class="filter-item" >
+              <el-select v-model="listQuery.qType" placeholder="选择题" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in qTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
               </el-select>
             </div>
@@ -139,7 +159,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qQwType" placeholder="what" clearable class="filter-item" >
+              <el-select v-model="listQuery.qQwType" placeholder="what" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in qQwOptions " :key="item.key" :label="item.label" :value="item.label" />
               </el-select>
             </div>
@@ -151,7 +171,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qCognitiveType" placeholder="记忆" clearable class="filter-item" >
+              <el-select v-model="listQuery.qCognitiveType" placeholder="记忆" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in qCognitiveTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
               </el-select>
             </div>
@@ -163,7 +183,7 @@
           </el-col>
           <el-col :span="4">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qScore" placeholder="1" clearable  class="filter-item">
+              <el-select v-model="listQuery.qScore" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in scoreOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
@@ -566,6 +586,11 @@ export default {
 
     handleFilter() {
       this.listQuery.pageNum = 1
+      this.getList()
+    },
+
+    handleClose(tag){
+      this.listQuery.cSubject = null
       this.getList()
     },
 

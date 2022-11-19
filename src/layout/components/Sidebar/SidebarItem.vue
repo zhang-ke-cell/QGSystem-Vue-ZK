@@ -10,7 +10,11 @@
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
+        <!--将原来的普通标签改为路由标签，样式的设定与./Item.vue相同-->
+        <router-link :to="resolvePath(item.path)">
+          <i :class="item.meta.icon" style="color: currentColor;width: 1em;height: 1em;margin-right: 12px;margin-left: -2px"></i>
+          <span >{{item.meta.title}}</span>
+        </router-link>
       </template>
       <sidebar-item
         v-for="child in item.children"
@@ -54,10 +58,12 @@ export default {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
     this.onlyOneChild = null
-    return {}
+    return {
+    }
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
+      // console.log('children*********',children, 'parent************', parent)
       const showingChildren = children.filter(item => {
         if (item.hidden) {
           return false
@@ -88,8 +94,17 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
+      // 组件的详细路由路径，从一级路由路径开始
+      // console.log('path.resolve(this.basePath, routePath)',path.resolve(this.basePath, routePath))
       return path.resolve(this.basePath, routePath)
     }
   }
 }
 </script>
+<style scoped>
+  .iconClass{
+    color: currentColor;
+    width: 1em;
+    height: 1em;
+  }
+</style>

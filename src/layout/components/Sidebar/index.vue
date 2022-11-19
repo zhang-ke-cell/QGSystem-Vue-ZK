@@ -31,6 +31,8 @@ export default {
       'sidebar'
     ]),
     routes() {
+      // 包含router/index.js里的所有路由元信息
+      // console.log('this.$router.options.routes', this.$router.options.routes)
       return this.$router.options.routes
     },
     activeMenu() {

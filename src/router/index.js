@@ -46,7 +46,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/Dashboard',
+    redirect: 'Dashboard',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -99,13 +99,22 @@ export const constantRoutes = [
   {
     path:'/manual',
     component: Layout,
-    meta: { title: '人工标注', icon: 'el-icon-thumb' },
+    name:'Manual',
+    redirect: '/manual/annotation',
+    meta: { title: '人工标注', icon: 'el-icon-s-check' },
     children:[
+      {
+        path: 'annotation',
+        name: 'AnnotationSpecification',
+        hidden: true,
+        component: () => import('@/views/Manual/AnnotationSpecification'),
+        meta: {title: '标注规范'}
+      },
       {
         path: 'evaluation',
         name: 'Evaluation',
         component: () => import('@/views/Manual/Evaluation'),
-        meta: { title: '问题评估', icon: 'el-icon-magic-stick' }
+        meta: { title: '问题评估', icon: 'el-icon-data-analysis' }
       },
       {
         path: 'submit',
@@ -160,13 +169,21 @@ export const constantRoutes = [
     path: '/stepqg',
     component: Layout,
     name: 'StepQG',
-    meta: { title: '问题生成', icon: 'el-icon-setting' },
+    redirect: '/stepqg/specification',
+    meta: { title: '问题生成', icon: 'el-icon-s-operation' },
     children: [
+      {
+        path: 'specification',
+        name: 'QGSpecification',
+        hidden: true,
+        component: () => import('@/views/StepQG/QGSpecification'),
+        meta: {title: "步骤"}
+      },
       {
         path: 'datainput',
         name: 'DataInput',
         component: () => import('@/views/StepQG/DataInput'),
-        meta: { title: '数据输入', icon: 'el-icon-document-add' }
+        meta: { title: '数据输入', icon: 'el-icon-s-data' }
       },
       // {
       //   path: 'content',
@@ -178,7 +195,7 @@ export const constantRoutes = [
         path: 'qgevaluation',
         name: 'QGEvaluation',
         component: () => import('@/views/StepQG/QGEvaluation'),
-        meta: { title: '问题生成与评估', icon: 'el-icon-magic-stick'  }
+        meta: { title: '问题生成与评估', icon: 'el-icon-data-analysis'  }
       },
       {
         path: 'distractor',
@@ -190,7 +207,7 @@ export const constantRoutes = [
         path: 'output',
         name: 'OutputStorage',
         component: () => import('@/views/StepQG/OutputStorage'),
-        meta: { title: '输出入库', icon: 'el-icon-box' }
+        meta: { title: '输出入库', icon: 'el-icon-takeaway-box' }
       },
     ]
   },
