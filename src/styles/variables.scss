@@ -1,15 +1,16 @@
 // sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$menuText:white;
+$menuActiveText:white;
+$subMenuActiveText:white; //https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuBg:#1C1C1C; // 设置侧边栏背景颜色
+$menuHover:DeepSkyBlue; // 设置一级菜单的悬浮色
 
-$subMenuBg:#1f2d3d;
-$subMenuHover:#001528;
+$subMenuBg:#1C1C1C; // 设置子菜单的背景色
+$subMenuHover:DeepSkyBlue; // 设置一级菜单的悬浮色
 
-$sideBarWidth: 210px;
+$activeBg: DeepSkyBlue; // 设置选中菜单的背景色
+$sideBarWidth: 240px; // 设置侧边栏宽度
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
@@ -21,5 +22,6 @@ $sideBarWidth: 210px;
   menuHover: $menuHover;
   subMenuBg: $subMenuBg;
   subMenuHover: $subMenuHover;
+  activeBg: $activeBg;
   sideBarWidth: $sideBarWidth;
 }

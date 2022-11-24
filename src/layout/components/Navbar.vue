@@ -1,25 +1,44 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <template v-if="device !== 'mobile'">
+        <!-- <search id="header-search" class="right-menu-item" /> -->
+        <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
+        <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
+        <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
+        </el-tooltip> -->
+        <lang-select class="right-menu-item hover-effect" />
+      </template>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <svg-icon
+            class-name="international-icon"
+            icon-class="successLogin"
+            style="width: 25px; height: 25px; vertical-align: 0.8em"
+          ></svg-icon>
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+        <el-dropdown-menu slot="dropdown" class="user-dropdown" >
+          <!-- <router-link to="/">
             <el-dropdown-item>
-              首页
+              {{ $t("navbar.dashboard") }}
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <!-- <a target="_blank" href="https://github.com/Congregalis">
             <el-dropdown-item>Github</el-dropdown-item>
           </a> -->
-          <router-link to="/myinfo">
+          <!-- <router-link to="/myinfo">
             <el-dropdown-item>
               我的信息
             </el-dropdown-item>
@@ -28,9 +47,16 @@
             <el-dropdown-item>
               我的评估
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出</span>
+            <svg-icon
+              class-name="international-icon"
+              icon-class="logout"
+              style="height:18px;width:18px;vertical-align:-0.2em"
+            ></svg-icon>
+            <span >
+              {{ $t("navbar.logOut") }}
+            </span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -39,31 +65,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
+// import ErrorLog from '@/components/ErrorLog'
+// import Screenfull from '@/components/Screenfull'
+// import SizeSelect from '@/components/SizeSelect'
+import LangSelect from "@/components/LangSelect";
+// import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    LangSelect,
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters(["sidebar", "avatar", "device"]),
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
-  }
-}
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -72,18 +101,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -110,10 +139,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <el-row>
           <el-col :span="6">
-            <span  style="display: inline-block;text-align: left !important;line-height:40px;font-weight: bold;font-size:x-large ">根据相关属性筛选</span>
+            <span  style="display: inline-block;text-align: left !important;line-height:40px;font-weight: bold;font-size:x-large ">{{$t('dataPresentation.FilterBasedOnAttributes')}}</span>
           </el-col>
           <!--<el-col :span="18">-->
           <!--  <div style="margin-top: 4px;font-size: 10px">-->
@@ -38,49 +38,49 @@
         <!--  </el-col>-->
         <!--</el-row>-->
         <el-row type="flex"  justify="space-between" style="margin-bottom: 18px">
-          <el-col :span="2">
+          <el-col :span="3">
             <div style="text-align: right;font-size: 20px;margin-right: 2px;">
-              <el-tag type="success" style="height: 40px;" ><label style="font-size:18px;line-height: 38px">数据集:</label></el-tag>
+              <el-tag type="success" style="height: 40px;" ><label style="font-size:18px;line-height: 38px">{{$t('dataPresentation.dataset')}}</label></el-tag>
               <!--<label>数据集：</label>-->
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.cSubject" placeholder="语文" clearable class="filter-item" @change="handleFilter">
-                <el-option v-for="item in subjectOptions " :key="item.key" :label="item.label" :value="item.label" />
+              <el-select v-model="listQuery.cSubject" :placeholder="$t('dataPresentation.Chinese')" clearable class="filter-item" @change="handleFilter">
+                <el-option v-for="item in subjectOptions " :key="item.key" :label="$t(`dataPresentation.${item.key}`)" :value="item.label" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>ID排序：</label>
+              <label>{{$t('dataPresentation.orderOfID')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.sort"  class="filter-item" @change="handleFilter">
-                <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+                <el-option v-for="item in sortOptions" :key="item.key" :label="$t(`dataPresentation.${item.label}`)" :value="item.key" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>语言：</label>
+              <label>{{$t('dataPresentation.language')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.cLanguage" placeholder="中文" clearable class="filter-item" @change="handleFilter">
-                <el-option v-for="item in languageOptions" :key="item.key" :label="item.label" :value="item.label" />
+              <el-select v-model="listQuery.cLanguage" :placeholder="$t(`dataPresentation.ChineseLang`)" clearable class="filter-item" @change="handleFilter">
+                <el-option v-for="item in languageOptions" :key="item.key" :label="$t(`dataPresentation.${item.key}`)" :value="item.label" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>来源：</label>
+              <label>{{$t('dataPresentation.source')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-input v-model="listQuery.cSource" placeholder="联想ppt"  class="filter-item" @change="handleFilter"/>
             </div>
@@ -89,48 +89,48 @@
       </div>
       <div  class="text item " style="text-align: left">
         <el-row type="flex" justify="space-between" style="margin-bottom: 18px">
-          <el-col :span="2">
+          <el-col :span="3">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>流畅性：</label>
+              <label>{{$t('dataPresentation.fluency')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qFluency" placeholder="1" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in fluencyOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>合理性：</label>
+              <label>{{$t('dataPresentation.answerability')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qReasonability" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in resonabilityOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>相关性：</label>
+              <label>{{$t('dataPresentation.relevance')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qRelevance" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in relevanceOptions" :key="item" :label="item" :value="item" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>难度：</label>
+              <label>{{$t('dataPresentation.difficulty')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qDifficulty" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in difficultyOptions" :key="item" :label="item" :value="item" />
@@ -140,48 +140,48 @@
         </el-row>
 
         <el-row type="flex"  justify="space-between">
-          <el-col :span="2">
+          <el-col :span="3">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>问题类型：</label>
+              <label>{{$t('dataPresentation.questionType')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qType" placeholder="选择题" clearable class="filter-item" @change="handleFilter">
-                <el-option v-for="item in qTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
+              <el-select v-model="listQuery.qType" :placeholder="$t(`dataPresentation.choiceQuestion`)" clearable class="filter-item" @change="handleFilter">
+                <el-option v-for="item in qTypeOptions " :key="item.key" :label="$t(`dataPresentation.${item.key}`)" :value="item.label" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>疑问词类型：</label>
+              <label>{{$t('dataPresentation.interrogativeType')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qQwType" placeholder="what" clearable class="filter-item" @change="handleFilter">
                 <el-option v-for="item in qQwOptions " :key="item.key" :label="item.label" :value="item.label" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>认知类型：</label>
+              <label>{{$t('dataPresentation.cognitiveType')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
-              <el-select v-model="listQuery.qCognitiveType" placeholder="记忆" clearable class="filter-item" @change="handleFilter">
-                <el-option v-for="item in qCognitiveTypeOptions " :key="item.key" :label="item.label" :value="item.label" />
+              <el-select v-model="listQuery.qCognitiveType" :placeholder="$t('dataPresentation.remember')" clearable class="filter-item" @change="handleFilter">
+                <el-option v-for="item in qCognitiveTypeOptions " :key="item.key" :label="$t(`dataPresentation.${item.key}`)" :value="item.label" />
               </el-select>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div style="text-align: right;font-size: 16px;margin-top: 10px">
-              <label>综合评价：</label>
+              <label>{{$t('dataPresentation.overallEvaluation')}}：</label>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             <div style="text-align: left;width: 100px">
               <el-select v-model="listQuery.qScore" placeholder="1" clearable  class="filter-item" @change="handleFilter">
                 <el-option v-for="item in scoreOptions" :key="item" :label="item" :value="item" />
@@ -223,37 +223,37 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="问题"  width="200px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.question')"  width="200px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <span class="link-type" @click="showQuestion(row,$index)">{{ row.qText }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="问题类型"  width="100px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.questionType')"  width="150px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <span>{{ row.qType }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="疑问词类型"  width="100px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.interrogativeType')"  width="150px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <span>{{ row.qQwType }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="认知类型"  width="100px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.cognitiveType')"  width="150px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <span>{{ row.qCognitiveType }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="答案"  width="100px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.answer')"  width="150px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <span>{{ row.qAnswer }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="干扰项"  width="300px" align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.distractor')"  width="300px" align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}" >
                   <el-tag v-for="(item,index) in row.qDistractorList" :key="index" style="margin-right: 4px">
                     {{item}}
@@ -262,37 +262,37 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="流畅性" width="100px">
+              <el-table-column :label="$t('dataPresentation.fluency')" width="150px">
                 <template v-slot="{row}">
                   <svg-icon v-for="n in + row.qFluency" :key="n" icon-class="star" class="meta-item__icon" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="合理性" width="100px">
+              <el-table-column :label="$t('dataPresentation.answerability')" width="150px">
                 <template v-slot="{row}">
                   <svg-icon v-for="n in + row.qReasonability" :key="n" icon-class="star" class="meta-item__icon" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="相关性" width="100px">
+              <el-table-column :label="$t('dataPresentation.relevance')" width="150px">
                 <template v-slot="{row}">
                   <svg-icon v-for="n in + row.qRelevance" :key="n" icon-class="star" class="meta-item__icon" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="难度" width="100px">
+              <el-table-column :label="$t('dataPresentation.difficulty')" width="150px">
                 <template v-slot="{row}">
                   <svg-icon v-for="n in + row.qDifficulty" :key="n" icon-class="star" class="meta-item__icon" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="综合评价" width="100px">
+              <el-table-column :label="$t('dataPresentation.overallEvaluation')" width="150px">
                 <template v-slot="{row}">
                   <svg-icon v-for="n in + row.qScore" :key="n" icon-class="star" class="meta-item__icon" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="标注者ID" width="150px"  align="center" :show-overflow-tooltip="true">
+              <el-table-column :label="$t('dataPresentation.evaluatorID')" width="150px"  align="center" :show-overflow-tooltip="true">
                 <template v-slot="{row}">
                   <el-tag v-for="(item,index) in row.userIdList" :key="index" style="margin-right: 4px">
                     {{item}}
@@ -311,19 +311,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="上下文"  align="center" :show-overflow-tooltip="true">
+        <el-table-column :label="$t('dataPresentation.context')"  align="center" :show-overflow-tooltip="true">
           <template v-slot="{row}">
             <span>{{ row.cText }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="标题"  width="200px" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column label="标题"  width="200px" align="center" :show-overflow-tooltip="true">
           <template v-slot="{row}">
             <span>{{ row.cTitle }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="语言" class-name="status-col" width="100" align="center">
+        <el-table-column :label="$t('dataPresentation.language')" class-name="status-col" width="100" align="center">
           <template v-slot="{row}" >
             <el-tag :type="row.cLanguage | languageFilter" effect="dark">
               {{ row.cLanguage}}
@@ -331,7 +331,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="学科" class-name="status-col" width="120" align="center">
+        <el-table-column :label="$t('dataPresentation.dataset')" class-name="status-col" width="120" align="center">
           <template v-slot="{row}">
             <el-tag :type="row.cSubject | subjectFilter" >
               {{row.cSubject}}
@@ -339,7 +339,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="来源" class-name="status-col" width="100" align="center">
+        <el-table-column :label="$t('dataPresentation.source')" class-name="status-col" width="100" align="center">
           <template v-slot="{row}">
             <el-tag :type="row.cSource | sourceFilter" effect="plain">
               {{row.cSource}}
@@ -349,30 +349,30 @@
       </el-table>
       <pagination style="text-align: center" v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageLimit" @pagination="getList" />
 
-    <el-dialog title="问题展示" :visible.sync="dialogFormVisible" >
-      <el-form ref="dataForm"  :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="上下文">
+    <el-dialog :title="$t('dataPresentation.showQuestion')" :visible.sync="dialogFormVisible" >
+      <el-form ref="dataForm"  :model="temp" label-position="left" label-width="150px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="$t('dataPresentation.context')">
           <el-input type="textarea" :autosize="true" :readonly="true" v-model="temp.cText" style="width: 500px"></el-input>
         </el-form-item>
-        <el-form-item label="问题">
+        <el-form-item :label="$t('dataPresentation.question')">
           <el-input type="textarea" :autosize="true" :readonly="true" v-model="temp.qText" style="width: 500px"></el-input>
         </el-form-item>
-        <el-form-item label="问题类型">
+        <el-form-item :label="$t('dataPresentation.questionType')">
           <el-input type="textarea" autosize :readonly="true" v-model="temp.qType" style="width: 100px"></el-input>
         </el-form-item>
-        <el-form-item label="疑问词类型">
+        <el-form-item :label="$t('dataPresentation.interrogativeType')">
           <el-input type="textarea" autosize :readonly="true" v-model="temp.qQwType" style="width: 100px"></el-input>
         </el-form-item>
-        <el-form-item label="认知类型">
+        <el-form-item :label="$t('dataPresentation.cognitiveType')">
           <el-input type="textarea" autosize :readonly="true" v-model="temp.qCognitiveType" style="width: 100px"></el-input>
         </el-form-item>
-        <el-form-item label="答案">
+        <el-form-item :label="$t('dataPresentation.answer')">
           <el-input type="textarea" autosize :readonly="true" v-model="temp.qAnswer" style="width: 100px"></el-input>
         </el-form-item>
-        <el-form-item label="干扰项">
+        <el-form-item :label="$t('dataPresentation.distractor')">
           <el-tag v-for="(item,index) in temp.qDistractorList" :key="index" style="margin-right: 20px">{{item}}</el-tag>
         </el-form-item>
-        <el-form-item label="流畅性">
+        <el-form-item :label="$t('dataPresentation.fluency')">
           <el-rate
             style="height: 40px;padding-top:10px "
             v-model="temp.qFluency"
@@ -382,7 +382,7 @@
             score-template="{value}">
           </el-rate>
         </el-form-item>
-        <el-form-item label="合理性">
+        <el-form-item :label="$t('dataPresentation.answerability')">
           <el-rate
             style="height: 40px;padding-top:10px "
             v-model="temp.qReasonability"
@@ -392,7 +392,7 @@
             score-template="{value}">
           </el-rate>
         </el-form-item>
-        <el-form-item label="相关性">
+        <el-form-item :label="$t('dataPresentation.relevance')">
           <el-rate
             style="height: 40px;padding-top:10px "
             v-model="temp.qRelevance"
@@ -402,7 +402,7 @@
             score-template="{value}">
           </el-rate>
         </el-form-item>
-        <el-form-item label="难度">
+        <el-form-item :label="$t('dataPresentation.difficulty')">
           <el-rate
             :max="3"
             style="height: 40px;padding-top:10px "
@@ -413,7 +413,7 @@
             score-template="{value}">
           </el-rate>
         </el-form-item>
-        <el-form-item label="综合评价">
+        <el-form-item :label="$t('dataPresentation.overallEvaluation')">
           <el-rate
             style="height: 40px;padding-top:10px "
             v-model="temp.qScore"
@@ -423,13 +423,13 @@
             score-template="{value}">
           </el-rate>
         </el-form-item>
-        <el-form-item label="标注者ID">
+        <el-form-item :label="$t('dataPresentation.evaluatorID')">
           <el-tag v-for="(item,index) in temp.userIdList" :key="index" style="margin-right: 20px">{{item}}</el-tag>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
-          关闭
+          {{$t('dataPresentation.close')}}
         </el-button>
       </div>
     </el-dialog>
@@ -524,8 +524,8 @@ export default {
       difficultyOptions: [1, 2, 3],
       scoreOptions: [1, 2, 3, 4, 5],
       languageOptions:[
-        {key:'Chinese', label:'中文'},
-        {key:'English', label:'英文'}
+        {key:'ChineseLang', label:'中文'},
+        {key:'EnglishLang', label:'英文'}
       ],
       subjectOptions:[
         {key:'Chinese', label:'语文'},
@@ -543,8 +543,8 @@ export default {
         {key:'High', label:'高中'}
       ],
       qTypeOptions:[
-        {key:'Choice',label:'选择题'},
-        {key:'QA', label: '问答题'}
+        {key:'choiceQuestion',label:'选择题'},
+        {key:'openQuestion', label: '问答题'}
       ],
       qQwOptions:[
         {key:'what', label:'What'},
@@ -559,11 +559,11 @@ export default {
         {key:'apply', label:'应用'},
         {key:'analyse', label:'分析'},
         {key:'evaluate', label:'检查'},
-        {key:'create', label:'创造'}
+        {key:'innovate', label:'创造'}
       ],
       sortOptions: [
-        { label: 'ID升序', key: '+id' },
-        { label: 'ID降序', key: '-id' }
+        { label: 'ascending', key: '+id' },
+        { label: 'descending', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
 

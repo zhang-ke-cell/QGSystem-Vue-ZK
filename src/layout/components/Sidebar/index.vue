@@ -9,7 +9,7 @@
         :text-color="variables.menuText"
         :unique-opened="false"
         :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
+        :collapse-transition="true"
         mode="vertical"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
@@ -37,6 +37,7 @@ export default {
     },
     activeMenu() {
       const route = this.$route
+      // console.log(route)
       const { meta, path } = route
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
@@ -56,3 +57,6 @@ export default {
   }
 }
 </script>
+<style>
+
+</style>

@@ -125,6 +125,7 @@ const mutations = {
     state.name = name
   },
   SET_AVATAR: (state, avatar) => {
+    // console.log(avatar)
     state.avatar = avatar
   }
 }

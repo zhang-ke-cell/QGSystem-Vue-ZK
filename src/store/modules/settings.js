@@ -8,6 +8,12 @@ const state = {
   sidebarLogo: sidebarLogo
 }
 
+const actions = {
+  changeSetting({ commit }, data) {
+    commit('CHANGE_SETTING', data)
+  }
+}
+
 const mutations = {
   CHANGE_SETTING: (state, { key, value }) => {
     // eslint-disable-next-line no-prototype-builtins
@@ -17,11 +23,6 @@ const mutations = {
   }
 }
 
-const actions = {
-  changeSetting({ commit }, data) {
-    commit('CHANGE_SETTING', data)
-  }
-}
 
 export default {
   namespaced: true,

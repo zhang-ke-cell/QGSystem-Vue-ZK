@@ -91,6 +91,11 @@
     }
   }
 
+  // 设置菜单被选中时的背景色
+  .el-menu-item.is-active, .el-submenu .el-menu-item.is-active {
+    background-color: $activeBg !important;
+ }
+
   .hideSidebar {
     .sidebar-container {
       width: 54px !important;

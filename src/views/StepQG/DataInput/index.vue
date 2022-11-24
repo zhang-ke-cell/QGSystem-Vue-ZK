@@ -70,7 +70,7 @@
           </el-table-column>
 
           <el-table-column label="上下文"  align="center" :show-overflow-tooltip="true">
-            <template v-slot="{row, $index}">
+            <template v-slot="{row}">
               <span style="margin-left: 10px; display: block">
                 {{ row.cText }}
               </span>
@@ -108,8 +108,8 @@
       </div>
       <div style="text-align: center">
         <el-button-group style="margin:0 auto">
-          <el-button type="info" icon="el-icon-arrow-left" @click="reloadFile">重新上传文件</el-button>
-          <el-button type="primary" @click="toContent">问题生成与评估<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+          <el-button type="info" icon="el-icon-arrow-left" @click="reloadFile">上一步</el-button>
+          <el-button type="primary" @click="toContent">下一步<i class="el-icon-arrow-right el-icon--right"></i></el-button>
         </el-button-group>
       </div>
       <el-dialog title="上下文修改" :visible.sync="dialogFormVisible">
