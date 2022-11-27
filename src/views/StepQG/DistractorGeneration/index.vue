@@ -41,19 +41,31 @@
             </el-form-item> -->
 
             <el-form-item label="干扰项A">
-              <el-input v-model="props.row.reference[0].distractor1" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[0].distractor1"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项B">
-              <el-input v-model="props.row.reference[0].distractor2" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[0].distractor2"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项C">
-              <el-input v-model="props.row.reference[0].distractor3" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[0].distractor3"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项D">
-              <el-input v-model="props.row.reference[0].distractor4" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[0].distractor4"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
           </el-form>
           <el-divider></el-divider>
@@ -84,19 +96,31 @@
             </el-form-item> -->
 
             <el-form-item label="干扰项A">
-              <el-input v-model="props.row.reference[1].distractor1" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[1].distractor1"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项B">
-              <el-input v-model="props.row.reference[1].distractor2" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[1].distractor2"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项C">
-              <el-input v-model="props.row.reference[1].distractor3" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[1].distractor3"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="干扰项D">
-              <el-input v-model="props.row.reference[1].distractor4" style="width:400px"></el-input>
+              <el-input
+                v-model="props.row.reference[1].distractor4"
+                style="width: 400px"
+              ></el-input>
             </el-form-item>
           </el-form>
         </template>
@@ -172,10 +196,14 @@ export default {
               title: null,
               answerStart: -1,
               answerText: "D",
-              distractor1: "kids who listened to happy music turned out to be energetic",
-              distractor2: "kids who listened to sad music liked to choose smiley faces",
-              distractor3: "kids worked harder in the background of happy music",
-              distractor4: "sad music helped kids find out small shapes quickly",
+              distractor1:
+                "kids who listened to happy music turned out to be energetic",
+              distractor2:
+                "kids who listened to sad music liked to choose smiley faces",
+              distractor3:
+                "kids worked harder in the background of happy music",
+              distractor4:
+                "sad music helped kids find out small shapes quickly",
             },
             {
               id: 3,
@@ -218,20 +246,25 @@ export default {
   width: 90px;
   color: #99a9bf;
 }
+
 .table-expand .el-form-item {
   /* margin-right: 0; */
   margin-bottom: 0;
   width: 100%;
 }
+
 .block {
   text-align: center;
 }
+
 .el-rate {
   margin-top: 10px;
 }
+
 .el-select {
   width: 130px;
 }
+
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
 }

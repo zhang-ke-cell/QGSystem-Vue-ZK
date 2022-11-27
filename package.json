@@ -2,7 +2,7 @@
   "name": "qgsystem-vue",
   "version": "0.0.1",
   "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-  "author": "Congregalis <hongzj2056@foxmail.com>",
+  "author": " ZhangKe <1819277996@qq.com>",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",
