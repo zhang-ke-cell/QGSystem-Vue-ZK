@@ -4,9 +4,9 @@
     <p align="center"> 
         本项目已开源，
         前端仓库为 
-        <el-button type="text"  size="medium"><a href="https://github.com/Congregalis/QGSystem-Vue" target="_blank">QGSystem-Vue</a></el-button>，
+        <el-button type="text"  size="medium"><a href="https://github.com/zhang-ke-cell/QGSystem-Vue-ZK" target="_blank">QGSystem-Vue</a></el-button>，
         后端仓库为
-        <el-button type="text" size="medium"><a href="https://github.com/Congregalis/QGSystem" target="_blank">QGSystem</a></el-button>，
+        <el-button type="text" size="medium"><a href="https://gitee.com/zzmqaq/qgsystem.git" target="_blank">QGSystem</a></el-button>，
         欢迎您一起参与贡献。
     </p>
 

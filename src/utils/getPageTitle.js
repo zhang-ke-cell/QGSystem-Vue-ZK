@@ -15,8 +15,4 @@ export default function getPageTitle(pageTitle) {
   }else{
     return `${title} - ${enLocale.route[pageTitle]}`
   }
-  // if (pageTitle) {
-  //   return `${title} - ${pageTitle}`
-  // }
-  // return `${title} - ${$t('')}`
 }

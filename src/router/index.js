@@ -56,8 +56,6 @@ export const constantRoutes = [
     ],
   },
 
-  { path: "*", redirect: "/404", hidden: true },
-
   {
     path: "/data",
     component: Layout,
@@ -69,7 +67,7 @@ export const constantRoutes = [
         meta: { title: "viewData", icon: "table" },
       },
     ],
-  },
+  }
 ];
 
 // 需要动态加载的路由
@@ -198,7 +196,7 @@ export const asyncRoutes = [
     ],
   },
   // 404 page must be placed at the end !!!
-  // { path: "*", redirect: "/404", hidden: true },
+  { path: "*", redirect: "/404", hidden: true },
 ];
 
 const createRouter = () =>
