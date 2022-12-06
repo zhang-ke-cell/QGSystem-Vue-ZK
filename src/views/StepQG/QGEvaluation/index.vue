@@ -55,6 +55,16 @@
                 </template>
               </el-table-column>
               <el-table-column
+                label="纠错后问题"
+                width="290px"
+                align="center"
+                :show-overflow-tooltip="true"
+              >
+                <template v-slot="{ row, $index }">
+                  <span>{{ row.qTextCorrection }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
                 label="答案"
                 width="100px"
                 align="center"
@@ -309,43 +319,43 @@ export default {
       finishLoadAlgo: false, // 判断是否加载完模型
 
       list: [
-        {
-          cId: "1",
-          cText:
-            "Homework can put you in a badmood , and that might actually be a good thing. Researchers from the University of Plymouth in England doubted whether mood might affect the way kids learn. To find out the answer, they did two experiments with children.\nThe first experiment tested 30 kids. Someshapes  were hidden inside a different, larger picture. The kids had to find the small shapes while sitting in a room with either cheerful or sad music playing in the background. To test their mood, the scientists asked the kids to point to one of five faces, from happy to sad. Children who listened to cheerful music tended to point to the smiley faces while the others pointed to the unhappy ones. The researchers found that sad kids took at least a second less to find the small shapes. They also found an average of three or four more shapes.\nIn the second experiment, 61 children watched one of two scenes from a film. One scene was happy, and the other was sad. Just like in the first experiment, kids who saw the sad scene acted better compared to the others.\nThe researchers guessed that feeling down makes people more likely to focus on a problem or difficult situation. Not all scientists agree with them, however. Other studies argued that maybe, that cheerful music in the first experimentdistracted   kids from finding shapes.\nWhile scientists work on finding out the answers, it still might be wise to choose when to do your tasks according to your mood. After eating a delicious ice cream, for example, write an essay.",
-          qList: [
-            {
-              qId: "1",
-              qText: "Researchers did experiments on kids in order to find out   _  .",
-              qAnswer: "B",
-              qIschecked: true,
-              qFluency: 1,
-              qRelevance: 2,
-              qReasonability: 3,
-              qDifficulty: 2,
-            },
-            {
-              qId: "2",
-              qText: "The researchers found in the first experiment that   _  .",
-              qAnswer: "in minim nisi cillum",
-              qIschecked: false,
-              qFluency: 1,
-              qRelevance: 2,
-              qReasonability: 3,
-              qDifficulty: 2,
-            },
-            {
-              qId: "3",
-              qText: "What can we learn from the text?",
-              qAnswer: "A",
-              qIschecked: true,
-              qFluency: 1,
-              qRelevance: 2,
-              qReasonability: 3,
-              qDifficulty: 2,
-            },
-          ],
-        },
+        // {
+        //   cId: "1",
+        //   cText:
+        //     "Homework can put you in a badmood , and that might actually be a good thing. Researchers from the University of Plymouth in England doubted whether mood might affect the way kids learn. To find out the answer, they did two experiments with children.\nThe first experiment tested 30 kids. Someshapes  were hidden inside a different, larger picture. The kids had to find the small shapes while sitting in a room with either cheerful or sad music playing in the background. To test their mood, the scientists asked the kids to point to one of five faces, from happy to sad. Children who listened to cheerful music tended to point to the smiley faces while the others pointed to the unhappy ones. The researchers found that sad kids took at least a second less to find the small shapes. They also found an average of three or four more shapes.\nIn the second experiment, 61 children watched one of two scenes from a film. One scene was happy, and the other was sad. Just like in the first experiment, kids who saw the sad scene acted better compared to the others.\nThe researchers guessed that feeling down makes people more likely to focus on a problem or difficult situation. Not all scientists agree with them, however. Other studies argued that maybe, that cheerful music in the first experimentdistracted   kids from finding shapes.\nWhile scientists work on finding out the answers, it still might be wise to choose when to do your tasks according to your mood. After eating a delicious ice cream, for example, write an essay.",
+        //   qList: [
+        //     {
+        //       qId: "1",
+        //       qText: "Researchers did experiments on kids in order to find out   _  .",
+        //       qAnswer: "B",
+        //       qIschecked: true,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //     {
+        //       qId: "2",
+        //       qText: "The researchers found in the first experiment that   _  .",
+        //       qAnswer: "in minim nisi cillum",
+        //       qIschecked: false,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //     {
+        //       qId: "3",
+        //       qText: "What can we learn from the text?",
+        //       qAnswer: "A",
+        //       qIschecked: true,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //   ],
+        // },
       ], // 表格数据
       total: 20,
 

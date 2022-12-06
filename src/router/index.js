@@ -1,10 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
+import Vue from "vue";
+import Router from "vue-router";
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -32,158 +31,120 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/Login/index'),
-    hidden: true
+    path: "/login",
+    component: () => import("@/views/Login/index"),
+    hidden: true,
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/404"),
+    hidden: true,
   },
 
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: 'Dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/Dashboard/index'),
-      meta: { title: 'dashboard', icon: 'dashboard' }
-    }]
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: () => import("@/views/Dashboard/index"),
+        meta: { title: "dashboard", icon: "dashboard" },
+      },
+    ],
   },
 
+  { path: "*", redirect: "/404", hidden: true },
+
   {
-    path: '/data',
+    path: "/data",
     component: Layout,
     children: [
       {
-        path: 'pre',
-        name: 'DataPresentation',
-        component: () => import('@/views/DataPresentation'),
-        meta: { title: 'viewData', icon: 'table' }
-      }
-    ]
-  },
-
-  // {
-  //   path: '/myinfo',
-  //   component: Layout,
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'MyInfo',
-  //       component: () => import('@/views/my/info'),
-  //       meta: { title: '个人信息', icon: 'info' }
-  //     }
-  //   ]
-  // },
-  //
-  // {
-  //   path: '/mydata',
-  //   component: Layout,
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'MyData',
-  //       component: () => import('@/views/my/evalution'),
-  //       meta: { title: '我的评估', icon: 'table' }
-  //     }
-  //   ]
-  // },
-
-  {
-    path:'/manual',
-    component: Layout,
-    name:'Manual',
-    redirect: '/manual/annotation',
-    meta: { title: 'humanAnnotation', icon: 'el-icon-s-check' },
-    children:[
-      {
-        path: 'annotation',
-        name: 'AnnotationSpecification',
-        hidden: true,
-        component: () => import('@/views/Manual/AnnotationSpecification'),
-        meta: {title: 'annotationSpecifications'}
+        path: "pre",
+        name: "DataPresentation",
+        component: () => import("@/views/DataPresentation"),
+        meta: { title: "viewData", icon: "table" },
       },
-      {
-        path: 'evaluation',
-        name: 'Evaluation',
-        component: () => import('@/views/Manual/Evaluation'),
-        meta: { title: 'evaluteQuestion', icon: 'el-icon-data-analysis' }
-      },
-      {
-        path: 'submit',
-        name: 'Submit',
-        component: () => import('@/views/Manual/Submit'),
-        meta: { title: 'submmitQuestion', icon: 'el-icon-edit' }
-      }
-    ]
+    ],
   },
+];
 
-  // {
-  //   path: '/Evaluation',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Evaluation',
-  //       component: () => import('@/views/Evaluation/index'),
-  //       meta: { title: '问题评估', icon: 'el-icon-star-on' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/post_question'),
-  //       meta: { title: '提交问题', icon: 'form' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/upload',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Upload',
-  //       component: () => import('@/views/upload/index'),
-  //       meta: { title: '上传数据', icon: 'el-icon-upload' }
-  //     }
-  //   ]
-  // },
-
-
+// 需要动态加载的路由
+export const asyncRoutes = [
   {
-    path: '/stepqg',
+    path: "/manual",
     component: Layout,
-    name: 'StepQG',
-    redirect: '/stepqg/specification',
-    meta: { title: 'semiAutomatedAnnotation', icon: 'el-icon-s-operation' },
+    name: "Manual",
+    redirect: "/manual/annotation",
+    meta: {
+      title: "humanAnnotation",
+      icon: "el-icon-s-check",
+      roles: ["admin", "anotator"],
+    },
     children: [
       {
-        path: 'specification',
-        name: 'QGSpecification',
+        path: "annotation",
+        name: "AnnotationSpecification",
         hidden: true,
-        component: () => import('@/views/StepQG/QGSpecification'),
-        meta: {title: "step"}
+        component: () => import("@/views/Manual/AnnotationSpecification"),
+        meta: {
+          title: "annotationSpecifications",
+          roles: ["admin", "anotator"],
+        },
       },
       {
-        path: 'datainput',
-        name: 'DataInput',
-        component: () => import('@/views/StepQG/DataInput'),
-        meta: { title: 'inputData', icon: 'el-icon-s-data' }
+        path: "evaluation",
+        name: "Evaluation",
+        component: () => import("@/views/Manual/Evaluation"),
+        meta: {
+          title: "evaluteQuestion",
+          icon: "el-icon-data-analysis",
+          roles: ["admin", "anotator"],
+        },
+      },
+      {
+        path: "submit",
+        name: "Submit",
+        component: () => import("@/views/Manual/Submit"),
+        meta: {
+          title: "submmitQuestion",
+          icon: "el-icon-edit",
+          roles: ["admin", "anotator"],
+        },
+      },
+    ],
+  },
+
+  {
+    path: "/stepqg",
+    component: Layout,
+    name: "StepQG",
+    redirect: "/stepqg/specification",
+    meta: {
+      title: "semiAutomatedAnnotation",
+      icon: "el-icon-s-operation",
+      roles: ["admin", "public"],
+    },
+    children: [
+      {
+        path: "specification",
+        name: "QGSpecification",
+        hidden: true,
+        component: () => import("@/views/StepQG/QGSpecification"),
+        meta: { title: "step", roles: ["admin", "public"] },
+      },
+      {
+        path: "datainput",
+        name: "DataInput",
+        component: () => import("@/views/StepQG/DataInput"),
+        meta: {
+          title: "inputData",
+          icon: "el-icon-s-data",
+          roles: ["admin", "public"],
+        },
       },
       // {
       //   path: 'content',
@@ -192,65 +153,67 @@ export const constantRoutes = [
       //   meta: { title: '内容抽取', icon:'el-icon-view' }
       // },
       {
-        path: 'qgevaluation',
-        name: 'QGEvaluation',
-        component: () => import('@/views/StepQG/QGEvaluation'),
-        meta: { title: 'generateAndEvaluateQuestions', icon: 'el-icon-data-analysis'  }
+        path: "qgevaluation",
+        name: "QGEvaluation",
+        component: () => import("@/views/StepQG/QGEvaluation"),
+        meta: {
+          title: "generateAndEvaluateQuestions",
+          icon: "el-icon-data-analysis",
+          roles: ["admin", "public"],
+        },
       },
       {
-        path: 'distractor',
-        name: 'DistractorGeneration',
-        component: () => import('@/views/StepQG/DistractorGeneration'),
-        meta: { title: 'generateDistractors', icon: 'el-icon-set-up'}
+        path: "distractor",
+        name: "DistractorGeneration",
+        component: () => import("@/views/StepQG/DistractorGeneration"),
+        meta: {
+          title: "generateDistractors",
+          icon: "el-icon-set-up",
+          roles: ["admin", "public"],
+        },
       },
       {
-        path: 'output',
-        name: 'OutputStorage',
-        component: () => import('@/views/StepQG/OutputStorage'),
-        meta: { title: 'storeIntoDatabase', icon: 'el-icon-takeaway-box' }
+        path: "output",
+        name: "OutputStorage",
+        component: () => import("@/views/StepQG/OutputStorage"),
+        meta: {
+          title: "storeIntoDatabase",
+          icon: "el-icon-takeaway-box",
+          roles: ["admin", "public"],
+        },
       },
-    ]
+    ],
   },
 
   {
-    path: '/About',
+    path: "/About",
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'About',
-        component: () => import('@/views/About/index'),
-        meta: { title: 'aboutUs', icon: 'el-icon-s-opportunity' }
-      }
-    ]
+        path: "index",
+        name: "About",
+        component: () => import("@/views/About/index"),
+        meta: { title: "aboutUs", icon: "el-icon-s-opportunity" },
+      },
+    ],
   },
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://github.com/Congregalis',
-  //       meta: { title: '关于我们', icon: 'link' }
-  //     }
-  //   ]
-  // },
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  // { path: "*", redirect: "/404", hidden: true },
+];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;

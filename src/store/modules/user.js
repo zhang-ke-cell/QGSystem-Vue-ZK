@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles: []
   }
 }
 
@@ -69,9 +70,10 @@ const actions = {
       if(!data){
         return Promise.reject('验证失败，请重新登录')
       }
-      const {name, avatar} = data
+      const {name, avatar, roles} = data
       commit('SET_NAME', name)
       commit('SET_AVATAR', avatar)
+      commit('SET_ROLES', roles)
       return '成功'
     }else{
       return Promise.reject('失败')
@@ -95,6 +97,8 @@ const actions = {
   async logout({ commit, state }){
     let res = await logout(state.token)
     if(res.code===200){
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
       removeToken()
       resetRouter()
       commit('RESET_STATE')
@@ -107,6 +111,8 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
@@ -127,6 +133,9 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     // console.log(avatar)
     state.avatar = avatar
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 

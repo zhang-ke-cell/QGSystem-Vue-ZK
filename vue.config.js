@@ -40,21 +40,21 @@ module.exports = {
     // before: require('./mock/mock-server.js')
     // 本地测试时 target 用 `http://127.0.0.1:8900/`
     // 服务器上部署时 target 用 `http://47.95.145.72:8089/`
-    // proxy: {
-    //   [process.env.VUE_APP_BASE_API]: {
-    //     // target: `http://127.0.0.1:8089/`,
-    //     // target: `http://127.0.0.1:8900/`,
-    //     target: `http://47.95.145.72:8089/qg-server`, // v0
-    //     // target: `http://127.0.0.1:4523/mock/945172/`, // v0
-    //     // public: `192.168.0.123:8080`,
-    //     changeOrigin: true,
-    //     // ws: true,
-    //     // secure: false,
-    //     pathRewrite: {
-    //       ["^" + process.env.VUE_APP_BASE_API]: ""
-    //     }
-    //   }
-    // },
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {
+        // target: `http://127.0.0.1:8089/`,
+        // target: `http://127.0.0.1:8900/`,
+        target: `http://47.105.158.15:8089/qg-server`, // v0
+        // target: `http://127.0.0.1:4523/mock/945172/`, // v0
+        // public: `192.168.0.123:8080`,
+        changeOrigin: true,
+        // ws: true,
+        // secure: false,
+        pathRewrite: {
+          ["^" + process.env.VUE_APP_BASE_API]: ""
+        }
+      }
+    },
     hot:true
   },
   configureWebpack: {

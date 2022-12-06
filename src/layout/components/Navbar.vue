@@ -89,6 +89,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch("user/logout");
+      // console.log('this.$route.fullPath', this.$route.fullPath)
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
   },

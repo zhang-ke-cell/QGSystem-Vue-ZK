@@ -13,6 +13,7 @@
         mode="vertical"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <!-- <sidebar-item v-for="route in sortedRoutes" :key="route.path" :item="route" :base-path="route.path" /> -->
       </el-menu>
     </el-scrollbar>
   </div>
@@ -23,18 +24,26 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import { constantRoutes } from '@/router'
 
 export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'permissionRoutes',
+      'routes'
     ]),
-    routes() {
-      // 包含router/index.js里的所有路由元信息
-      // console.log('this.$router.options.routes', this.$router.options.routes)
-      return this.$router.options.routes
-    },
+    // sortedRoutes() {
+    //   // 包含router/index.js里的所有路由元信息
+    //   // console.log('this.$router.options.routes', this.$router.options.routes)
+    //   // this.$router.options.routes.splice(4,0,...this.permissionRoutes)
+    //   let routes = constantRoutes
+    //   console.log('routes', routes);
+    //   console.log('permissionRoutes', this.permissionRoutes)
+    //   routes.splice(4,0,...this.permissionRoutes)
+    //   return routes
+    // },
     activeMenu() {
       const route = this.$route
       // console.log(route)

@@ -43,10 +43,18 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
-      <div class="tips">
-        <span style="margin-right:15px;">公共访问账号：public</span>
-        <span>密码：public</span>
-        <span style="float: right"><strong>标注者</strong>请联系管理员获取账密</span>
+      <div class="tips" style="text-align:center; font-size: 14px;">
+        <div style="margin-bottom:5px">
+          <span ><strong>公共</strong>访问账号：public</span>
+          <span>密码：public123</span>
+        </div>
+        <div style="margin-bottom:5px"> 
+          <span ><strong>标注者</strong>账号：labeler</span>
+          <span>密码：labeler123</span>
+        </div>
+        <div>
+          <span ><strong>管理者</strong>请联系管理员获取账号与密码</span>
+        </div>
       </div>
 
     </el-form>
@@ -96,9 +104,10 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        // console.log('新的route', route)
         this.redirect = route.query && route.query.redirect
       },
-      immediate: true
+      immediate: true //初始化时让handler调用一下
     }
   },
   methods: {
@@ -119,6 +128,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            // console.log('this.redirect', this.redirect)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
