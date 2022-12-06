@@ -3,8 +3,6 @@ import Cookies from "js-cookie"
 export default function getLanguage() {
   const chooseLanguage = Cookies.get('language')
   if (chooseLanguage) return chooseLanguage
-
-  // if has not choose language
   // const language = (navigator.language || navigator.browserLanguage).toLowerCase()
   // console.log('language', language);
   // console.log('messages', messages)
