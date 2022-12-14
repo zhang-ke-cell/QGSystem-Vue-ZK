@@ -25,7 +25,7 @@
           <svg-icon
             class-name="international-icon"
             icon-class="successLogin"
-            style="width: 25px; height: 25px; vertical-align: 0.8em"
+            style="width: 25px; height: 25px;vertical-align: 0.8em;cursor:pointer"
           ></svg-icon>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -52,7 +52,7 @@
             <svg-icon
               class-name="international-icon"
               icon-class="logout"
-              style="height:18px;width:18px;vertical-align:-0.2em"
+              style="height:18px;width:18px;vertical-align:-0.2em;right:0px"
             ></svg-icon>
             <span >
               {{ $t("navbar.logOut") }}
@@ -172,5 +172,12 @@ export default {
       }
     }
   }
+}
+.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom[data-v-d16d6306] {
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    top: 25px;
+    font-size: 12px;
 }
 </style>
