@@ -7,8 +7,7 @@
 
 ## Demo
 
-[线上demo](http://zscl.xjtudlc.com:8089/)
-
+[线上demo](http://47.105.158.15:8089/)
 ![](demo_img/DataPresentation.png)
 ![](demo_img/EvaluateQuestion.png)
 ![](demo_img/SubmmitQuestion.png)
