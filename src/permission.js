@@ -73,6 +73,7 @@ router.beforeEach(async (to, from, next) => {
   document.title = getPageTitle(to.meta.title);
   // 获取用户登录的token，用于判断用户是否登录了
   const Token = getToken();
+  console.log(from,to)
   // 获取用户信息：名字
   if (Token) {
     //用户登录后无法再去login页面，转到首页页面
@@ -87,7 +88,7 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
-          // 获取用户信息：名字和头像（get user info）
+          // 获取用户信息：名字、头像、角色列表
           await store.dispatch("user/getInfo");
           const roles = store.getters.roles
           await store.dispatch(

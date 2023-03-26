@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function uploadContext(data){
+    return request({
+        url:'/multistep/uploadContext',
+        method:'post',
+        data
+    })
+}
+
 export function uploadFile(data){
   return request({
     url:'/multistep/uploadFile',

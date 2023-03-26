@@ -1,158 +1,190 @@
 <template>
   <div class="app-main">
-    <!-- <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-      <el-select v-model="select" slot="prepend" placeholder="请选择">
-        <el-option label="Question" value="1"></el-option>
-        <el-option label="Title" value="2"></el-option>
-        <el-option label="Id" value="3"></el-option>
-      </el-select>
-      <el-button slot="append" icon="el-icon-search"></el-button>
-    </el-input> -->
-    <!--
-      @filter-change:当表格的筛选条件发生变化的时候会触发该事件，参数的值是一个对象，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
-      v-loading="listLoading"，element-loading-text="Loading":在接口为请求到数据之前，显示加载中，直到请求到数据后消失-->
-    <el-table :data="tableData" fit highlight-current-row>
-      <el-table-column type="expand">
-        <template v-slot="props">
-          <el-form
-            label-position="left"
-            label-width="90px"
-            inline
-            class="table-expand"
-          >
-            <el-form-item label="问题ID">
-              <span>{{ props.row.reference[0].id }}</span>
-            </el-form-item>
+    <el-card class="box-card" v-loading="loading">
+      <div slot="header" class="clearfix">
+        <div style="display: inline-block; line-height: 40px">
+          <label style="font-size: x-large">干扰项生成</label>
+        </div>
+          <el-button style="float: right; background-color: white" icon="el-icon-search" @click="getList">获取干扰项</el-button>
+      </div>
 
-            <el-form-item label="问题">
-              <span>{{ props.row.reference[0].text }}</span>
-            </el-form-item>
+      <el-table
+        v-loading="loading"
+        :data="list"
+        border
+        fit
+        highlight-current-row
+        :default-expand-all="false"
+      >
+        <el-table-column type="expand">
+          <template slot-scope="{ row }">
+            <el-table border :data="row.qList" style="width: 100%">
+              <el-table-column label="问题 ID" align="center" width="85">
+                <template v-slot="{ row }">
+                  <span>{{ row.qId }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="纠错后问题"
+                width="328px"
+                align="center"
+                :show-overflow-tooltip="true"
+              >
+                <template v-slot="{ row }">
+                  <span>{{ row.qTextCorrection }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="答案"
+                width="150px"
+                align="center"
+                :show-overflow-tooltip="true"
+              >
+                <template v-slot="{ row }">
+                  <span>{{ row.qAnswer }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="干扰项"
+                width="300px"
+                align="center"
+                :show-overflow-tooltip="true"
+              >
+                <template v-slot="{ row }">
+                    <el-tag v-for="(item,index) in row.qDistractorList" :key="index" style="margin-right: 4px">
+                    {{item}}
+                  </el-tag>
+                  <!-- <span>{{ row.qAnswer }}</span> -->
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="状态"
+                class-name="status-col"
+                width="95"
+                align="center"
+              >
+                <template slot-scope="{ row }">
+                  <div style="margin: 0 auto; text-align: center">
+                    <el-tag :type="row.qIsChecked | qStatusFilter">
+                      {{ row.qIsChecked ? "已标注" : "未标注" }}
+                    </el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="200">
+                <template slot-scope="{ row, $index }">
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    icon="el-icon-edit"
+                    @click="handleEdit(row, $index)"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    icon="el-icon-delete"
+                    @click="handleDelete(row, $index)"
+                  >
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
 
-            <el-form-item label="答案">
-              <span>{{ props.row.reference[0].answerText }}</span>
-            </el-form-item>
+        <el-table-column label="上下文 ID" prop="cId" align="center" width="85">
+          <template slot-scope="{ row }">
+            <span>{{ row.cId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="上下文"
+          align="center"
+          :show-overflow-tooltip="true"
+        >
+          <template v-slot="{ row }">
+            <span>{{ row.cText }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" class-name="status-col" width="120">
+          <template slot-scope="{ row }">
+            <div style="margin: 0 auto; text-align: center">
+              <el-tag :type="row.allChecked | cStatusFilter">
+                {{ row.allChecked ? "已全部标注" : "未全部标注" }}
+              </el-tag>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
-            <!-- <el-form-item label="Context">
-              <span>{{ props.row.reference.text }}</span>
-            </el-form-item> -->
+    <Pagination
+      style="text-align: center"
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.pageNum"
+      :limit.sync="listQuery.pageLimit"
+      @pagination="getList"
+    />
 
-            <!-- <el-form-item label="Status">
-              <span>{{ props.row.checkedTimes > 0 ? 'checked' : 'unchecked' }}</span>
-            </el-form-item> -->
-
-            <el-form-item label="干扰项A">
-              <el-input
-                v-model="props.row.reference[0].distractor1"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项B">
-              <el-input
-                v-model="props.row.reference[0].distractor2"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项C">
-              <el-input
-                v-model="props.row.reference[0].distractor3"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项D">
-              <el-input
-                v-model="props.row.reference[0].distractor4"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-          <el-divider></el-divider>
-          <el-form
-            label-position="left"
-            label-width="90px"
-            inline
-            class="table-expand"
-          >
-            <el-form-item label="问题ID">
-              <span>{{ props.row.reference[1].id }}</span>
-            </el-form-item>
-
-            <el-form-item label="问题">
-              <span>{{ props.row.reference[1].text }}</span>
-            </el-form-item>
-
-            <el-form-item label="答案">
-              <span>{{ props.row.reference[1].answerText }}</span>
-            </el-form-item>
-
-            <!-- <el-form-item label="Context">
-              <span>{{ props.row.reference.text }}</span>
-            </el-form-item> -->
-
-            <!-- <el-form-item label="Status">
-              <span>{{ props.row.checkedTimes > 0 ? 'checked' : 'unchecked' }}</span>
-            </el-form-item> -->
-
-            <el-form-item label="干扰项A">
-              <el-input
-                v-model="props.row.reference[1].distractor1"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项B">
-              <el-input
-                v-model="props.row.reference[1].distractor2"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项C">
-              <el-input
-                v-model="props.row.reference[1].distractor3"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="干扰项D">
-              <el-input
-                v-model="props.row.reference[1].distractor4"
-                style="width: 400px"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="上下文ID" align="center" width="95">
-        <template v-slot="scope">
-          {{ scope.row.id }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="上下文" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.text }}
-        </template>
-      </el-table-column>
-
-      <!-- <el-table-column label="答案" width="200" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.answerText }}</span>
-        </template>
-      </el-table-column> -->
-
-      <!-- <el-table-column label="Title" width="150" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.reference.title }}
-        </template>
-      </el-table-column> -->
-    </el-table>
-    <div style="text-align: center; margin-top: 20px">
+    <el-dialog title="问题展示" :visible.sync="dialogFormVisible">
+      <el-form
+        ref="dataForm"
+        :model="temp"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left: 50px"
+      >
+        <el-form-item label="上下文">
+          <el-input
+            type="textarea"
+            :autosize="true"
+            :readonly="true"
+            v-model="temp.cText"
+            style="width: 500px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="纠错后问题">
+          <el-input
+            type="textarea"
+            :autosize="true"
+            :readonly="true"
+            v-model="temp.qTextCorrection"
+            style="width: 500px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="答案">
+          <el-input
+            type="textarea"
+            :autosize="true"
+            :readonly="true"
+            v-model="temp.qAnswer"
+            style="width: 500px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="干扰项">
+          <el-input
+            type="textarea"
+            :autosize="true"
+            :readonly="false"
+            v-for="(item,index) in temp.qDistractorList"
+            :key="index"
+            v-model="temp.qDistractorList[index]"
+            style="width: 500px"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleNo">取 消</el-button>
+        <el-button type="primary" @click="handleYes">确 定</el-button>
+      </div>
+    </el-dialog>
+    <div style="text-align: center">
       <el-button-group style="margin: 0 auto">
-        <el-button type="info" icon="el-icon-arrow-left" @click="toQG"
+        <el-button type="info" icon="el-icon-arrow-left" @click="toContent"
           >上一步</el-button
         >
         <el-button type="primary" @click="toOutput"
@@ -162,110 +194,290 @@
     </div>
   </div>
 </template>
-
 <script>
+import Pagination from "@/components/Pagination";
+import waves from "@/directive/waves";
+import {
+  getDistractors,
+} from "@/api/distractorGeneration";
+import cloneDeep from "lodash/cloneDeep";
+
 export default {
-  name: "DistractorGeneration",
+  name: "QGEvaluation",
+  components: { Pagination },
+  directives: { waves },
+  filters: {
+    qStatusFilter(status) {
+      return status ? "success" : "danger";
+    },
+    cStatusFilter(status) {
+      return status ? "success" : "danger";
+    },
+  },
   data() {
     return {
-      select: "",
-      input: "",
+      loading: false, // 是否显示加载
+      algo: undefined, // 选择的算法
+      algoOptions: [
+        { key: "0", label: "无答案", value: 0 },
+        { key: "1", label: "有答案", value: 1 },
+      ], //模型选项
+      finishLoadAlgo: false, // 判断是否加载完模型
 
-      //table相关参数
-      listLoading: true,
-      list: null,
-      tableData: [
-        {
-          id: 1,
-          text: "Homework can put you in a badmood , and that might actually be a good thing. Researchers from the University of Plymouth in England doubted whether mood might affect the way kids learn. To find out the answer, they did two experiments with children.\nThe first experiment tested 30 kids. Someshapes  were hidden inside a different, larger picture. The kids had to find the small shapes while sitting in a room with either cheerful or sad music playing in the background. To test their mood, the scientists asked the kids to point to one of five faces, from happy to sad. Children who listened to cheerful music tended to point to the smiley faces while the others pointed to the unhappy ones. The researchers found that sad kids took at least a second less to find the small shapes. They also found an average of three or four more shapes.\nIn the second experiment, 61 children watched one of two scenes from a film. One scene was happy, and the other was sad. Just like in the first experiment, kids who saw the sad scene acted better compared to the others.\nThe researchers guessed that feeling down makes people more likely to focus on a problem or difficult situation. Not all scientists agree with them, however. Other studies argued that maybe, that cheerful music in the first experimentdistracted   kids from finding shapes.\nWhile scientists work on finding out the answers, it still might be wise to choose when to do your tasks according to your mood. After eating a delicious ice cream, for example, write an essay.",
-          reference: [
-            {
-              id: 1,
-              text: "Researchers did experiments on kids in order to find out   _  .",
-              title: null,
-              answerStart: -1,
-              answerText: "B",
-              distractor1: "how they really feel when they are learning",
-              distractor2: "whether mood affects their learning ability",
-              distractor3: "what methods are easy for kids to learn",
-              distractor4: "he relationship between sadness and happiness",
-            },
-            {
-              id: 2,
-              text: "The researchers found in the first experiment that   _  .",
-              title: null,
-              answerStart: -1,
-              answerText: "D",
-              distractor1:
-                "kids who listened to happy music turned out to be energetic",
-              distractor2:
-                "kids who listened to sad music liked to choose smiley faces",
-              distractor3:
-                "kids worked harder in the background of happy music",
-              distractor4:
-                "sad music helped kids find out small shapes quickly",
-            },
-            {
-              id: 3,
-              text: "What can we learn from the text?",
-              title: null,
-              answerStart: -1,
-              answerText: "A",
-              distractor1: "The researchers will continue to do experiments.",
-              distractor2: "The researchers have found a clear answer.",
-              distractor3: "The experiments are popular among kids.",
-              distractor4: "Kids change their feelings more easily.",
-            },
-          ],
-          checkedTimes: 0,
-          score: 0,
-          isDeleted: 0,
-          userId: null,
-        },
-      ],
+      list: [
+        // {
+        //   cId: "1",
+        //   cText:
+        //     "Homework can put you in a badmood , and that might actually be a good thing. Researchers from the University of Plymouth in England doubted whether mood might affect the way kids learn. To find out the answer, they did two experiments with children.\nThe first experiment tested 30 kids. Someshapes  were hidden inside a different, larger picture. The kids had to find the small shapes while sitting in a room with either cheerful or sad music playing in the background. To test their mood, the scientists asked the kids to point to one of five faces, from happy to sad. Children who listened to cheerful music tended to point to the smiley faces while the others pointed to the unhappy ones. The researchers found that sad kids took at least a second less to find the small shapes. They also found an average of three or four more shapes.\nIn the second experiment, 61 children watched one of two scenes from a film. One scene was happy, and the other was sad. Just like in the first experiment, kids who saw the sad scene acted better compared to the others.\nThe researchers guessed that feeling down makes people more likely to focus on a problem or difficult situation. Not all scientists agree with them, however. Other studies argued that maybe, that cheerful music in the first experimentdistracted   kids from finding shapes.\nWhile scientists work on finding out the answers, it still might be wise to choose when to do your tasks according to your mood. After eating a delicious ice cream, for example, write an essay.",
+        //   qList: [
+        //     {
+        //       qId: "1",
+        //       qText: "Researchers did experiments on kids in order to find out   _  .",
+        //       qAnswer: "B",
+        //       qIschecked: true,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //     {
+        //       qId: "2",
+        //       qText: "The researchers found in the first experiment that   _  .",
+        //       qAnswer: "in minim nisi cillum",
+        //       qIschecked: false,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //     {
+        //       qId: "3",
+        //       qText: "What can we learn from the text?",
+        //       qAnswer: "A",
+        //       qIschecked: true,
+        //       qFluency: 1,
+        //       qRelevance: 2,
+        //       qReasonability: 3,
+        //       qDifficulty: 2,
+        //     },
+        //   ],
+        // },
+      ], // 表格数据
+      total: 20,
+
+      temp: {}, // 对话框数据
+      dialogFormVisible: false, // 是否显示对话框
+
+      listQuery: {
+        pageNum: 0,
+        pageLimit: 20,
+      },
     };
   },
-
   methods: {
+    async selectAlgo() {
+      if (this.algo === undefined) {
+        this.$message.warning("请先选择模型 ！");
+        return;
+      }
+      this.loading = true;
+      try {
+        let res = await selectAlgo({ algorithm: this.algo });
+        if (res.code === 200) {
+          setTimeout(() => {
+            this.$message.success("加载模型成功");
+            this.loading = false;
+            this.finishLoadAlgo = true;
+          }, 300);
+        } else {
+          this.loading = false;
+        }
+      } catch (e) {
+        this.loading = false;
+        this.$message.error("加载模型失败");
+      }
+    },
+
+    async getList() {
+      // if(!this.finishLoadAlgo){
+      //   this.$message.warning('请先加载模型 ！')
+      //   return
+      // }
+      this.loading = true;
+      try {
+        let res = await getDistractors(this.listQuery);
+        this.total = res.data.total;
+        res.data.dataList.forEach((item) => {
+          let index = item.qList.findIndex((i) => i.qIsChecked === false);
+          item.allChecked = index === -1;
+        });
+        this.list = res.data.dataList;
+        if (res.code === 200) {
+          setTimeout(() => {
+            this.$message.success("获取问题成功");
+            this.loading = false;
+          }, 300);
+        } else {
+          this.loading = false;
+        }
+      } catch (e) {
+        this.loading = false;
+        this.$message.error("获取问题失败");
+      }
+    },
+
+    handleEdit(row, index) {
+      this.dialogFormVisible = true;
+      this.temp = cloneDeep(row);
+      // console.log('handleedit', index, row)
+      let index1 = this.list.findIndex((item) => {
+        if (item.qList.length >= index + 1) {
+          return row.qId === item.qList[index].qId;
+        } else {
+          return false;
+        }
+      });
+      // console.log(index1)
+      this.list[index1].cText &&
+        this.$set(this.temp, "cText", this.list[index1].cText);
+      this.list[index1].cId &&
+        this.$set(this.temp, "cId", this.list[index1].cId);
+    },
+
+    async handleModifyStatus(row, status, index) {
+      // console.log(status)
+      row.qIsChecked = status;
+      // console.log(row.qId, index)
+      let index1 = this.list.findIndex((item) => {
+        if (item.qList.length >= index + 1) {
+          return row.qId === item.qList[index].qId;
+        } else {
+          return false;
+        }
+      });
+      // console.log(index1)
+      let index2 = this.list[index1].qList.findIndex((item) => {
+        // console.log(item)
+        return item.qIsChecked === false;
+      });
+      // console.log(index2)
+      this.$set(this.list[index1], "allChecked", index2 === -1);
+      try {
+        // 发送请求
+        this.listLoading = true;
+        let res = await updateQustion(row);
+        if (res.code === 200) {
+          setTimeout(() => {
+            this.listLoading = false;
+            this.$message({
+              message: `成功更新ID为${row.qId}的问题`,
+              type: "success",
+            });
+          }, 300);
+        } else {
+          this.listLoading = false;
+        }
+      } catch (e) {
+        this.listLoading = false;
+        this.$message({
+          message: `更新ID为${row.qId}的问题失败`,
+          type: "error",
+        });
+      }
+    },
+
+    async handleDelete(row, index) {
+      //弹框：messagebox的使用
+      this.$confirm(`确定删除?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          //当用户点击确定按钮的时候会出发
+          this.listLoading = true;
+          let res = await deleteQuestion({ qId: row.qId });
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$message({
+                type: "success",
+                message: `删除ID为${row.qId}的问题成功!`,
+              });
+              this.getList();
+              this.listLoading = false;
+            }, 300);
+          }
+        })
+        .catch(() => {
+          //当用户点击取消按钮的时候会触发
+          this.$message({
+            type: "info",
+            message: `已取消删除ID为${row.qId}的问题`,
+          });
+          this.listLoading = false;
+        });
+    },
+
+    handleYes() {
+      let index1 = this.list.findIndex((item) => item.cId === this.temp.cId);
+      let index2 = this.list[index1].qList.findIndex((item) => {
+        return item.qId === this.temp.qId;
+      });
+      delete this.temp.cId;
+      delete this.temp.cText;
+      this.list[index1].qList.splice(index2, 1, this.temp);
+      this.dialogFormVisible = false;
+      this.handleModifyStatus(this.list[index1].qList[index2], true, index2);
+      // this.$notify.info({
+      //   title:'提示',
+      //   message:'请点击 更新 按钮更新问题'
+      // })
+    },
+
+    handleNo() {
+      this.dialogFormVisible = false;
+    },
+
     toOutput() {
       this.$router.push({ name: "OutputStorage" });
     },
-    toQG() {
-      this.$router.push({ name: "QGEvaluation" });
-    },
+
+    toContent(){
+        this.$router.push({name:'QGEvaluation'})
+      }
   },
 };
 </script>
 
 <style scoped>
-.table-expand {
-  font-size: 0;
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(32, 160, 255);
+  }
 }
 
-.table-expand label {
-  width: 90px;
-  color: #99a9bf;
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
 }
 
-.table-expand .el-form-item {
-  /* margin-right: 0; */
-  margin-bottom: 0;
+.box-card {
   width: 100%;
 }
 
-.block {
-  text-align: center;
+.el-divider--vertical {
+  height: 40px;
 }
 
-.el-rate {
-  margin-top: 10px;
-}
-
-.el-select {
-  width: 130px;
-}
-
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
+/deep/ .el-table__expanded-cell[class*="cell"] {
+  padding: 0px 47px;
 }
 </style>

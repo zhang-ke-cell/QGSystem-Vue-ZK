@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'QG System',
+  title: 'EQG System',
 
   /**
  * @type {boolean} true | false

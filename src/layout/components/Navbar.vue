@@ -52,7 +52,7 @@
             <svg-icon
               class-name="international-icon"
               icon-class="logout"
-              style="height:18px;width:18px;vertical-align:-0.2em;right:0px"
+              style="height:18px;width:18px;vertical-align:-0.2em;"
             ></svg-icon>
             <span >
               {{ $t("navbar.logOut") }}
@@ -173,7 +173,7 @@ export default {
     }
   }
 }
-.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom[data-v-d16d6306] {
+.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom {
     cursor: pointer;
     position: absolute;
     right: 0px;

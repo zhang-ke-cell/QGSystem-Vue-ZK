@@ -3,10 +3,10 @@
   <div>
     <h2 style="margin-left: 20px">面向任务</h2>
     <p style="margin-left: 40px; line-height: 32px">
-      1. 多跳问题生成：根据句子不同部分进行提问 <br>
-      2. 多样性问题生成：生成多样的问题 <br>
-      3. 难度可控问题生成：给定一段文本、一个答案和指定的难度级别，生成一个流畅且切合文本、答案和指定难度级别的问题。 <br>
-      4. 问题评估：根据一个生成的问题，给出相应的得分<br>
+      1. 多跳试题生成：给定一段文本和答案，通过聚合和推理来自不同段落的多个分散证据来生成与答案相关的试题。 <br>
+      2. 无答案试题生成：在不给定答案的情况下生成问题 <br>
+      3. 难度可控试题生成：给定一段文本、一个答案和指定的难度级别，生成一个流畅且切合文本、答案和指定难度级别的试题。 <br>
+      4. 试题评估：评估生成试题的可回答性<br>
       5. 干扰项生成：根据正确答案，生成对应的多选题干扰项<br>
     </p>
   </div>
@@ -25,17 +25,17 @@
       <span style="color: blue">清政府下令彻底废除人丁编审，户籍管理制度正式退出历史舞台。</span>——节选自《中国户籍制度的历史考》（394字）
     </p>
     <p style="margin-left: 40px; line-height: 32px">
-      <strong>问题1：</strong><span style="color: red">户籍制度萌芽与哪个朝代？</span><br>
+      <strong>试题1：</strong><span style="color: red">户籍制度萌芽与哪个朝代？</span><br>
       <strong>答案：</strong>商朝<br>
       <strong>干扰项：</strong> A.商朝 B.唐朝 C.宋朝 D.秦朝<br>
     </p>
     <p style="margin-left: 40px; line-height: 32px">
-      <strong>问题2：</strong><span style="color: #13ce66">两汉时期口赋和什么是国家财政的一项主要来源？</span><br>
+      <strong>试题2：</strong><span style="color: #13ce66">两汉时期口赋和什么是国家财政的一项主要来源？</span><br>
       <strong>答案：</strong>算赋<br>
       <strong>干扰项：</strong>A.房赋 B.地赋 C.算赋 D.人口赋<br>
     </p>
     <p style="margin-left: 40px; line-height: 32px">
-      <strong>问题3：</strong><span style="color: blue">户籍管理制度正式退出历史舞台的标志是什么？</span><br>
+      <strong>试题3：</strong><span style="color: blue">户籍管理制度正式退出历史舞台的标志是什么？</span><br>
       <strong>答案：</strong>清政府下令彻底废除人丁编审。<br>
     </p>
   </div>
@@ -45,7 +45,7 @@
     <h2 style="margin-left: 20px">标注流程</h2>
     <p style="margin-left: 40px; line-height: 32px">
       1. 对给定的上下文，首先根据上下文标准判断其是否合规，然后修复语病以及多余成分（如：”阅读下列材料回答问题“）。<br>
-      2. 然后对于机器生成的问题利用评估标准进行打分。<br>
+      2. 然后对于机器生成的试题利用评估标准进行打分。<br>
       3. 然后根据新问题标注规范标注新的问题及答案、干扰项。<br>
     </p>
   </div>
@@ -54,13 +54,13 @@
   <div>
     <h2 style="margin-left: 20px">上下文</h2>
     <p style="margin-left: 40px; line-height: 32px">
-      长度在200到400之间（这一点采用自动化处理），修复语病及多余成分。删除不想关的句子。<strong>在上下文中标记问题所提问文本段。</strong>
+      长度在200到400之间（这一点采用自动化处理），修复语病及多余成分。删除不想关的句子。<strong>在上下文中标记试题所提问文本段。</strong>
     </p>
   </div>
   <el-divider content-position="left"></el-divider>
 
   <div>
-    <h2 style="margin-left: 20px">问题</h2>
+    <h2 style="margin-left: 20px">试题</h2>
     <p style="margin-left: 40px; line-height: 32px">
     </p>
   </div>

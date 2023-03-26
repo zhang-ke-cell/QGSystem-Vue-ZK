@@ -17,7 +17,7 @@
             style="display: block; float: right"
           ></el-divider>
         </div>
-        <el-select style="float: right" v-model="algo" placeholder="请选择模型">
+        <el-select style="float: right;width:120px" v-model="algo" placeholder="请选择模型">
           <el-option
             v-for="item in algoOptions"
             :key="item.value"
@@ -37,10 +37,10 @@
         :default-expand-all="false"
       >
         <el-table-column type="expand">
-          <template slot-scope="{ row, $index }">
+          <template slot-scope="{ row }">
             <el-table border :data="row.qList" style="width: 100%">
               <el-table-column label="问题 ID" align="center" width="85">
-                <template v-slot="{ row, $index }">
+                <template v-slot="{ row }">
                   <span>{{ row.qId }}</span>
                 </template>
               </el-table-column>
@@ -50,7 +50,7 @@
                 align="center"
                 :show-overflow-tooltip="true"
               >
-                <template v-slot="{ row, $index }">
+                <template v-slot="{ row }">
                   <span>{{ row.qText }}</span>
                 </template>
               </el-table-column>
@@ -60,7 +60,7 @@
                 align="center"
                 :show-overflow-tooltip="true"
               >
-                <template v-slot="{ row, $index }">
+                <template v-slot="{ row }">
                   <span>{{ row.qTextCorrection }}</span>
                 </template>
               </el-table-column>
@@ -315,7 +315,10 @@ export default {
     return {
       loading: false, // 是否显示加载
       algo: undefined, // 选择的算法
-      algoOptions: [{ key: "0", label: "mt5", value: 0 }], //模型选项
+      algoOptions: [
+        { key: "0", label: "无答案", value: 0 },
+        { key: "1", label: "有答案", value: 1 },
+      ], //模型选项
       finishLoadAlgo: false, // 判断是否加载完模型
 
       list: [
@@ -368,7 +371,6 @@ export default {
       },
     };
   },
-
   methods: {
     async selectAlgo() {
       if (this.algo === undefined) {

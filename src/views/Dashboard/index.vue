@@ -130,7 +130,7 @@ export default {
       var myChart = echarts.init(document.getElementById('evalution'));
       var option = {
         title: {
-            text: '问题评估情况',
+            text: '试题评估情况',
             subtext: '',
             left: 'center'
         },
@@ -143,7 +143,7 @@ export default {
         },
         series: [
             {
-                name: '问题数',
+                name: '试题数',
                 type: 'pie',
                 radius: '50%',
                 data: [
@@ -166,7 +166,7 @@ export default {
       var myChart = echarts.init(document.getElementById('distribution'));
       var option = {
         title: {
-            text: '问题地理分布',
+            text: '试题地理分布',
             subtext: '包含所有',
             left: 'center',
             top: '5%'
@@ -200,7 +200,7 @@ export default {
       var myChart = echarts.init(document.getElementById('type'));
       var option = {
         title: {
-            text: '问题类型分布',
+            text: '试题类型分布',
             subtext: '包含所有',
             left: 'center'
         },
@@ -229,7 +229,7 @@ export default {
       var myChart = echarts.init(document.getElementById('difficulty'));
       var option = {
         title: {
-            text: '问题难度分布',
+            text: '试题难度分布',
             subtext: '仅包含已评估数据',
             left: 'center',
         },
@@ -258,7 +258,7 @@ export default {
       var myChart = echarts.init(document.getElementById('rate'));
       var option = {
         title: {
-            text: '问题评估分数分布',
+            text: '试题评估分数分布',
         },
         legend: {},
         tooltip: {},

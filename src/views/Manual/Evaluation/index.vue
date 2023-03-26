@@ -68,7 +68,7 @@
                 type="text"
                 icon="el-icon-circle-plus-outline"
                 @click="addQuestion"
-                >增加问题</el-button
+                >增加试题</el-button
               >
             </el-col>
           </el-row>
@@ -135,7 +135,7 @@
             :name="`${index + 1}`"
           >
             <template slot="title">
-              <label style="font-size: 20px">{{ `问题${index + 1}` }}</label>
+              <label style="font-size: 20px">{{ `试题${index + 1}` }}</label>
               <div style="margin-left: 900px">
                 <el-popconfirm
                   title="确定删除"
@@ -162,7 +162,7 @@
                   class="grid-content label-col"
                   style="line-height: 40px; font-size: 16px"
                 >
-                  <label>问题</label>
+                  <label>试题</label>
                 </div>
               </el-col>
               <el-col :span="1">
@@ -267,7 +267,7 @@
                 </div></el-col
               >
               <el-col :span="5"
-                ><div style="color: gray">问题是否流畅通顺</div></el-col
+                ><div style="color: gray">试题是否流畅通顺</div></el-col
               >
               <el-col :span="12">
                 <div class="rate-box">
@@ -294,7 +294,7 @@
                 </div></el-col
               >
               <el-col :span="5"
-                ><div style="color: gray">问题与答案是否合理</div></el-col
+                ><div style="color: gray">试题与答案是否合理</div></el-col
               >
               <el-col :span="12">
                 <div class="rate-box">
@@ -321,7 +321,7 @@
                 </div></el-col
               >
               <el-col :span="5"
-                ><div style="color: gray">问题是否与相应上下文匹配</div></el-col
+                ><div style="color: gray">试题是否与相应上下文匹配</div></el-col
               >
               <el-col :span="12">
                 <div class="rate-box">
@@ -348,7 +348,7 @@
                 </div></el-col
               >
               <el-col :span="5"
-                ><div style="color: gray">回答该问题的难易程度</div></el-col
+                ><div style="color: gray">回答该试题的难易程度</div></el-col
               >
               <el-col :span="3">
                 <el-select v-model="q.qDifficulty" placeholder="请选择">
@@ -622,7 +622,7 @@ export default {
       });
       this.$notify.info({
         title: "消息",
-        message: "已经在底部增加一个问题",
+        message: "已经在底部增加一个试题",
       });
     },
 
@@ -664,7 +664,7 @@ export default {
         if (this.dataObj.qList[end].qText === "") {
           this.$notify.error({
             title: "错误",
-            message: "问题不能为空",
+            message: "试题不能为空",
             offset: 300,
           });
           return;
@@ -709,13 +709,13 @@ export default {
       this.dataObj.qList.splice(index, 1);
       this.$notify({
         title: "成功",
-        message: "删除问题成功",
+        message: "删除试题成功",
         type: "success",
       });
     },
 
     updateDelete() {
-      this.$confirm("删除所有的问题?", "警告", {
+      this.$confirm("删除所有的试题?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

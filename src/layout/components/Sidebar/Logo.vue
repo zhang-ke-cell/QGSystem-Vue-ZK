@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '问题生成标注系统',
+      title: '试题生成系统',
       logo: './favicon.ico'
     }
   }
