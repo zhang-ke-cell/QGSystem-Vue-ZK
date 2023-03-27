@@ -274,7 +274,7 @@
         if(extension !== 'ppt' && extension !=='pptx' && extension !=='txt' && extension !=='pdf') {
           this.$notify.warning({
             title: '警告',
-            message: `只能上传ppt/pptx（即后缀是.ppt/.pptx）文件`
+            message: `只能上传ppt/pptx/txt/pdf文件`
           });
           return false;
         }

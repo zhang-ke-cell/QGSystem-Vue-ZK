@@ -45,10 +45,22 @@ service.interceptors.response.use(
         const res = response.data
         // if the custom code is not 200, it is judged as an error.
         if (res.code !== 200) {
-            console.log(res)
+            // console.log(res)
             if(res.code===400){
                 Message({
-                    message: '账户或者密码错误',
+                    message: '请求参数有误',
+                    type: 'error',
+                    duration: 3 * 1000
+                })
+            }else if(res.code===401){
+                Message({
+                    message: '统一身份验证失败',
+                    type: 'error',
+                    duration: 3 * 1000
+                })
+            }else if(res.code===404){
+                Message({
+                    message: '请求资源不存在',
                     type: 'error',
                     duration: 3 * 1000
                 })
