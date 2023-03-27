@@ -271,7 +271,8 @@
         let extension = file.name.substring(file.name.lastIndexOf('.')+1)
         // console.log(extension)
         let size = file.size / 1024 / 1024
-        if(extension !== 'ppt' && extension !=='pptx' && extension !=='txt' && extension !=='pdf') {
+        let allowFile = ["ppt", "pptx", "txt", "pdf","PPT", "PPTX", "TXT", "PDF"]
+        if(!allowFile.includes(extension)) {
           this.$notify.warning({
             title: '警告',
             message: `只能上传ppt/pptx/txt/pdf文件`
