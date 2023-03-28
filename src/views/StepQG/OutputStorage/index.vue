@@ -5,7 +5,7 @@
           <div style="display: inline-block; line-height: 40px">
             <label style="font-size: x-large">试题入库</label>
           </div>
-          <el-button style="float: right; background-color: white" icon="el-icon-search" @click="getList">浏览试题</el-button>
+          <!-- <el-button style="float: right; background-color: white" icon="el-icon-search" @click="getList">浏览试题</el-button> -->
         </div>
         <el-table
           v-loading="loading"
@@ -13,18 +13,18 @@
           border
           fit
           highlight-current-row
-          :default-expand-all="false"
+          :default-expand-all="true"
         >
           <el-table-column type="expand">
             <template slot-scope="{ row }">
               <el-table border :data="row.qList" style="width: 100%">
-                <el-table-column label="问题 ID" align="center" width="85">
+                <el-table-column label="试题 ID" align="center" width="85">
                   <template v-slot="{ row }">
                     <span>{{ row.qId }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="问题"
+                  label="试题"
                   width="290px"
                   align="center"
                   :show-overflow-tooltip="true"
@@ -34,7 +34,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="纠错后问题"
+                  label="修正的试题"
                   width="290px"
                   align="center"
                   :show-overflow-tooltip="true"
@@ -255,6 +255,9 @@ import cloneDeep from "lodash/cloneDeep";
         },
       };
     },
+    mounted: function(){
+        this.getList()
+    },
     methods: {
       async selectAlgo() {
         if (this.algo === undefined) {
@@ -295,7 +298,7 @@ import cloneDeep from "lodash/cloneDeep";
           this.list = res.data.dataList;
           if (res.code === 200) {
             setTimeout(() => {
-              this.$message.success("获取问题成功");
+              this.$message.success("获取试题成功");
               this.loading = false;
             }, 300);
           } else {
@@ -303,7 +306,7 @@ import cloneDeep from "lodash/cloneDeep";
           }
         } catch (e) {
           this.loading = false;
-          this.$message.error("获取问题失败");
+          this.$message.error("获取试题失败");
         }
       },
   
@@ -351,7 +354,7 @@ import cloneDeep from "lodash/cloneDeep";
             setTimeout(() => {
               this.listLoading = false;
               this.$message({
-                message: `成功更新ID为${row.qId}的问题`,
+                message: `成功更新ID为${row.qId}的试题`,
                 type: "success",
               });
             }, 300);
@@ -361,7 +364,7 @@ import cloneDeep from "lodash/cloneDeep";
         } catch (e) {
           this.listLoading = false;
           this.$message({
-            message: `更新ID为${row.qId}的问题失败`,
+            message: `更新ID为${row.qId}的试题失败`,
             type: "error",
           });
         }
@@ -382,7 +385,7 @@ import cloneDeep from "lodash/cloneDeep";
               setTimeout(() => {
                 this.$message({
                   type: "success",
-                  message: `删除ID为${row.qId}的问题成功!`,
+                  message: `删除ID为${row.qId}的试题成功!`,
                 });
                 this.getList();
                 this.listLoading = false;
@@ -393,7 +396,7 @@ import cloneDeep from "lodash/cloneDeep";
             //当用户点击取消按钮的时候会触发
             this.$message({
               type: "info",
-              message: `已取消删除ID为${row.qId}的问题`,
+              message: `已取消删除ID为${row.qId}的试题`,
             });
             this.listLoading = false;
           });

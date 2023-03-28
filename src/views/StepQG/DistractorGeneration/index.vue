@@ -1,11 +1,11 @@
 <template>
   <div class="app-main">
-    <el-card class="box-card" v-loading="loading">
+    <el-card class="box-card">
       <div slot="header" class="clearfix">
         <div style="display: inline-block; line-height: 40px">
           <label style="font-size: x-large">干扰项生成</label>
         </div>
-          <el-button style="float: right; background-color: white" icon="el-icon-search" @click="getList">获取干扰项</el-button>
+          <el-button style="float: right; background-color: white;border: 1px solid black" icon="el-icon-search" @click="getList">生成干扰项</el-button>
       </div>
 
       <el-table
@@ -14,7 +14,7 @@
         border
         fit
         highlight-current-row
-        :default-expand-all="false"
+        :default-expand-all="true"
       >
         <el-table-column type="expand">
           <template slot-scope="{ row }">
@@ -25,7 +25,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                label="纠错后问题"
+                label="修正的问题"
                 width="328px"
                 align="center"
                 :show-overflow-tooltip="true"
@@ -314,7 +314,7 @@ export default {
         this.list = res.data.dataList;
         if (res.code === 200) {
           setTimeout(() => {
-            this.$message.success("获取问题成功");
+            this.$message.success("生成干扰项成功");
             this.loading = false;
           }, 300);
         } else {
@@ -322,7 +322,7 @@ export default {
         }
       } catch (e) {
         this.loading = false;
-        this.$message.error("获取问题失败");
+        this.$message.error("生成干扰项失败");
       }
     },
 
@@ -370,7 +370,7 @@ export default {
           setTimeout(() => {
             this.listLoading = false;
             this.$message({
-              message: `成功更新ID为${row.qId}的问题`,
+              message: `成功更新ID为${row.qId}的试题`,
               type: "success",
             });
           }, 300);
@@ -380,7 +380,7 @@ export default {
       } catch (e) {
         this.listLoading = false;
         this.$message({
-          message: `更新ID为${row.qId}的问题失败`,
+          message: `更新ID为${row.qId}的试题失败`,
           type: "error",
         });
       }

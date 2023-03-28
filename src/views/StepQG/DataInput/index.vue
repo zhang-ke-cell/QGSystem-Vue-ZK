@@ -2,7 +2,7 @@
     <div>
       <el-card>
         <div slot="header" class="clearfix">
-          <label style="font-size: x-large">学习材料上传</label>
+          <label style="font-size: x-large">上下文抽取</label>
         </div>
         <el-form :model="form" v-loading="listLoading">
           <el-form-item>

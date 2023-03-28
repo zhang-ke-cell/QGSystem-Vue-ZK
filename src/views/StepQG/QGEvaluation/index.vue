@@ -1,23 +1,28 @@
 <template>
   <div class="app-main">
-    <el-card class="box-card" v-loading="loading">
+    <el-card class="box-card">
       <div slot="header" class="clearfix">
         <div style="display: inline-block; line-height: 40px">
-          <label style="font-size: x-large">问题生成</label>
+          <label style="font-size: x-large">试题生成与评估</label>
         </div>
-        <el-button-group style="float: right; background-color: ghostwhite">
+        <!-- <el-button-group style="float: right; background-color: ghostwhite">
           <el-button icon="el-icon-help" @click="selectAlgo"
             >加载模型</el-button
           >
           <el-button icon="el-icon-search" @click="getList">获取问题</el-button>
-        </el-button-group>
+        </el-button-group> -->
         <div style="float: right; height: 40px">
           <el-divider
             direction="vertical"
             style="display: block; float: right"
           ></el-divider>
+          <el-button icon="el-icon-search" @click="getList" style="border: 1px solid black">生成试题</el-button>
         </div>
-        <el-select style="float: right;width:120px" v-model="algo" placeholder="请选择模型">
+        <el-select
+          style="float: right; width: 120px; border: 1px solid black"
+          v-model="algo"
+          placeholder="请选择模型"
+        >
           <el-option
             v-for="item in algoOptions"
             :key="item.value"
@@ -34,18 +39,20 @@
         border
         fit
         highlight-current-row
-        :default-expand-all="false"
+        :default-expand-all="true"
+        element-loading-text="生成试题中，需要您等待30秒-1分钟"
+        element-loading-spinner="el-icon-loading"
       >
         <el-table-column type="expand">
           <template slot-scope="{ row }">
             <el-table border :data="row.qList" style="width: 100%">
-              <el-table-column label="问题 ID" align="center" width="85">
+              <el-table-column label="试题 ID" align="center" width="85">
                 <template v-slot="{ row }">
                   <span>{{ row.qId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                label="问题"
+                label="试题"
                 width="290px"
                 align="center"
                 :show-overflow-tooltip="true"
@@ -55,7 +62,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                label="纠错后问题"
+                label="修正的试题"
                 width="290px"
                 align="center"
                 :show-overflow-tooltip="true"
@@ -193,7 +200,7 @@
       @pagination="getList"
     />
 
-    <el-dialog title="问题展示" :visible.sync="dialogFormVisible">
+    <el-dialog title="试题展示" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :model="temp"
@@ -210,7 +217,7 @@
             style="width: 500px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="问题">
+        <el-form-item label="试题">
           <el-input
             type="textarea"
             :autosize="true"
@@ -400,8 +407,43 @@ export default {
       //   this.$message.warning('请先加载模型 ！')
       //   return
       // }
+      if (this.algo === undefined) {
+          this.$message.warning("请先选择模型 ！");
+          return;
+        }
       this.loading = true;
-      try {
+      try{
+        let firstRes = await selectAlgo({ algorithm: this.algo });
+      }catch(e){
+        this.loading = false;
+        this.$message.error("生成试题失败");
+      }
+
+    //   try {
+    //     if (this.algo === undefined) {
+    //       this.$message.warning("请先选择模型 ！");
+    //       return;
+    //     }
+    //     let res = await getQuestions(this.listQuery);
+    //     this.total = res.data.total;
+    //     res.data.dataList.forEach((item) => {
+    //       let index = item.qList.findIndex((i) => i.qIsChecked === false);
+    //       item.allChecked = index === -1;
+    //     });
+    //     this.list = res.data.dataList;
+    //     if (res.code === 200) {
+    //       setTimeout(() => {
+    //         this.$message.success("获取问题成功");
+    //         this.loading = false;
+    //       }, 300);
+    //     } else {
+    //       this.loading = false;
+    //     }
+    //   } catch (e) {
+    //     this.loading = false;
+    //     this.$message.error("获取问题失败");
+    //   }
+      setTimeout(async () => {
         let res = await getQuestions(this.listQuery);
         this.total = res.data.total;
         res.data.dataList.forEach((item) => {
@@ -411,16 +453,13 @@ export default {
         this.list = res.data.dataList;
         if (res.code === 200) {
           setTimeout(() => {
-            this.$message.success("获取问题成功");
+            this.$message.success("生成试题成功");
             this.loading = false;
           }, 300);
         } else {
           this.loading = false;
         }
-      } catch (e) {
-        this.loading = false;
-        this.$message.error("获取问题失败");
-      }
+      }, 45000);
     },
 
     handleEdit(row, index) {
@@ -467,7 +506,7 @@ export default {
           setTimeout(() => {
             this.listLoading = false;
             this.$message({
-              message: `成功更新ID为${row.qId}的问题`,
+              message: `成功更新ID为${row.qId}的试题`,
               type: "success",
             });
           }, 300);
@@ -477,7 +516,7 @@ export default {
       } catch (e) {
         this.listLoading = false;
         this.$message({
-          message: `更新ID为${row.qId}的问题失败`,
+          message: `更新ID为${row.qId}的试题失败`,
           type: "error",
         });
       }
@@ -498,7 +537,7 @@ export default {
             setTimeout(() => {
               this.$message({
                 type: "success",
-                message: `删除ID为${row.qId}的问题成功!`,
+                message: `删除ID为${row.qId}的试题成功!`,
               });
               this.getList();
               this.listLoading = false;
@@ -509,7 +548,7 @@ export default {
           //当用户点击取消按钮的时候会触发
           this.$message({
             type: "info",
-            message: `已取消删除ID为${row.qId}的问题`,
+            message: `已取消删除ID为${row.qId}的试题`,
           });
           this.listLoading = false;
         });
@@ -547,6 +586,13 @@ export default {
 </script>
 
 <style scoped>
+
+element.style {
+    border: 2px solid black;
+}
+el-input{
+    border: 2px solid black;
+}
 .link-type,
 .link-type:focus {
   color: #337ab7;
